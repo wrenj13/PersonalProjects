@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import cs242.chess.pieces.ChessPiece;
 import cs242.chess.pieces.King;
+import cs242.chess.pieces.Pawn;
 
 /**
  * Contains the implementation for a human player. The class contains an ArrayList of all pieces that the player has; as pieces are taken,
@@ -80,15 +81,31 @@ public class ChessPlayer {
 		if (targetPiece != null) {
 			opponentPieces.remove(targetPiece);
 		}
-		// move piece (and remove piece there)
-		piece.moveTo(targetSpace);
+		// if it is a Pawn, we don't want to let it promote
+		Pawn currentPawn = null;
+		if (piece instanceof Pawn) {
+			currentPawn = (Pawn) piece;
+		}
+		if (currentPawn != null && ((currentPawn.getDirection() == 0 && targetSpace.getRow() == 7) || (currentPawn.getDirection() == 1 && targetSpace.getRow() == 0))) {
+			if (targetPiece != null) {
+				targetSpace.getPiece().setSpace(null);
+			}
+			targetSpace.setPiece(piece);
+			piece.getSpace().setPiece(null);
+			piece.setSpace(targetSpace);
+		}
+		else { // otherwise use the abstract method to move the piece (and remove the piece there)
+			piece.moveTo(targetSpace);
+		}
 		// check if in check
 		dangerSpaces = board.findPossibleMoves(opponentPieces);
 		CaptureSpace canCaptureKing = board.findCaptureSpace(dangerSpaces, king.getSpace());
 		// move piece back
 		piece.moveTo(originalSpace);
 		// undo capture and re-add piece. If there is no piece there, targetSpace will have its piece set to null
-		targetSpace.setPiece(targetPiece);
+		if (targetPiece != null) {
+			targetPiece.moveTo(targetSpace);
+		}
 		return canCaptureKing == null? false : true;
 	}
 	
@@ -113,6 +130,7 @@ public class ChessPlayer {
 				possibleMoves.remove(spaceIndex);
 			}
 		}
+		System.out.println(possibleMoves.size());
 		return possibleMoves;
 	}
 }

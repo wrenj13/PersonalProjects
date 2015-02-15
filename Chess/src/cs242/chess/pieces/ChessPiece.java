@@ -117,7 +117,9 @@ public abstract class ChessPiece {
 			newSpace.getPiece().setSpace(null);
 		}
 		newSpace.setPiece(this);
-		getSpace().setPiece(null);
+		if (getSpace() != null) {
+			getSpace().setPiece(null);
+		}
 		setSpace(newSpace);
 	}
 }
