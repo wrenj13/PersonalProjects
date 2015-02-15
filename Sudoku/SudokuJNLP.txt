@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" href="SudokuApplet.jnlp">
+    <information>
+        <title>Sudoku</title>
+        <vendor>Ren-Jay Wang</vendor>
+    </information>
+    <resources>
+        <!-- Application Resources -->
+        <j2se version="1.7+"
+            href="http://java.sun.com/products/autodl/j2se" />
+        <jar href="Sudoku.jar" main="true" />
+
+    </resources>
+    <applet-desc 
+         name="Sudoku Applet"
+         main-class="SudokuDisplayApplet"
+         width="1000"
+         height="1000">
+     </applet-desc>
+     <update check="background"/>
+</jnlp>  
