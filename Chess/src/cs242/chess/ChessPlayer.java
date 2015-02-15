@@ -119,10 +119,10 @@ public class ChessPlayer {
 			return null;
 		}
 		ArrayList<CaptureSpace> possibleMoves = board.findPossibleMoves(pieces);
-		for (int spaceIndex = pieces.size() - 1; spaceIndex >= 0; spaceIndex--) {
+		for (int spaceIndex = possibleMoves.size() - 1; spaceIndex >= 0; spaceIndex--) {
 			CaptureSpace currentSpace = possibleMoves.get(spaceIndex);
 			for (int pieceIndex = currentSpace.getPieces().size() - 1; pieceIndex >= 0; pieceIndex--) {
-					if (moveLeavesKingInCheck(currentSpace.getPieces().get(pieceIndex), currentSpace)) {
+					if (moveLeavesKingInCheck(currentSpace.getPieces().get(pieceIndex), board.getPointValue(currentSpace.getRow(), currentSpace.getCol()))) {
 						currentSpace.getPieces().remove(pieceIndex);
 				}
 			}
@@ -130,7 +130,6 @@ public class ChessPlayer {
 				possibleMoves.remove(spaceIndex);
 			}
 		}
-		System.out.println(possibleMoves.size());
 		return possibleMoves;
 	}
 }
