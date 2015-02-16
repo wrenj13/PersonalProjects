@@ -54,6 +54,7 @@ public class ComputerPlayer extends ChessPlayer {
 						ChessPiece queen = new Queen(p.getColor(), targetSpace);
 						targetSpace.setPiece(queen);
 						addPiece(queen);
+						removePiece(p);
 						return true;
 					} else {
 						if (tryCount > 10) {
@@ -116,7 +117,15 @@ public class ComputerPlayer extends ChessPlayer {
 				}
 			}
 			if (bestSpace != null) {
-				p.moveTo(bestSpace);
+				if (p instanceof Pawn && (bestSpace.getRow() == 0 || bestSpace.getRow() == 7)) {
+					p.getSpace().setPiece(null);
+					ChessPiece queen = new Queen(p.getColor(), bestSpace);
+					bestSpace.setPiece(queen);
+					addPiece(queen);
+					removePiece(p);	
+				} else {
+					p.moveTo(bestSpace);
+				}
 				return true;
 			}
 		}
@@ -193,8 +202,6 @@ public class ComputerPlayer extends ChessPlayer {
 		// need to add for moving other pieces (worth less) in the line of danger
 		return false;
 	}
-
-
 
 	// take out spaces in front of enemy pawns
 	// put in spaces where enemy pawns could capture if computer piece was there
