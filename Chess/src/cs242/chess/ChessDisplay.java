@@ -1,6 +1,8 @@
 package cs242.chess;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -9,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import cs242.chess.pieces.Bishop;
 import cs242.chess.pieces.ChessPiece;
@@ -29,79 +32,9 @@ public class ChessDisplay {
 		final ChessBoard board = new ChessBoard();
 
 		// First, we put all the pieces on the board.
-		ArrayList<ChessPiece> blackPieces = new ArrayList<ChessPiece>();
-		ChessPiece blackRookLeft = new Rook(Color.BLACK, board.getPointValue(0, 0));
-		board.getPointValue(0, 0).setPiece(blackRookLeft);
-		blackPieces.add(blackRookLeft);
-		ChessPiece blackKnightLeft = new Knight(Color.BLACK, board.getPointValue(0, 1));
-		board.getPointValue(0, 1).setPiece(blackKnightLeft);
-		blackPieces.add(blackKnightLeft);
-		ChessPiece blackBishopLeft = new Bishop(Color.BLACK, board.getPointValue(0, 2));
-		board.getPointValue(0, 2).setPiece(blackBishopLeft);
-		blackPieces.add(blackBishopLeft);
-		ChessPiece blackQueen = new Queen(Color.BLACK, board.getPointValue(0, 3));
-		board.getPointValue(0, 3).setPiece(blackQueen);
-		blackPieces.add(blackQueen);
-		ChessPiece blackKing = new King(Color.BLACK, board.getPointValue(0, 4));
-		board.getPointValue(0, 4).setPiece(blackKing);
-		blackPieces.add(blackKing);
-		ChessPiece blackBishopRight = new Bishop(Color.BLACK, board.getPointValue(0, 5));
-		board.getPointValue(0, 5).setPiece(blackBishopRight);
-		blackPieces.add(blackBishopRight);
-		ChessPiece blackKnightRight = new Knight(Color.BLACK, board.getPointValue(0, 6));
-		board.getPointValue(0, 6).setPiece(blackKnightRight);
-		blackPieces.add(blackKnightRight);
-		ChessPiece blackRookRight = new Rook(Color.BLACK, board.getPointValue(0, 7));
-		board.getPointValue(0, 7).setPiece(blackRookRight);
-		blackPieces.add(blackRookRight);
-
-		ChessPiece blackPawn = null;
-		for (int i = 0; i < board.getWidth(); i++) {
-			blackPawn = new Pawn(Color.BLACK, board.getPointValue(1, i), 0);
-			board.getPointValue(1, i).setPiece(blackPawn);
-			blackPieces.add(blackPawn);
-		}
-
-		ChessPlayer blackPlayer = new ComputerPlayer(blackPieces, board);
-
-		ArrayList<ChessPiece> whitePieces = new ArrayList<ChessPiece>();
-		ChessPiece whiteRookLeft = new Rook(Color.WHITE, board.getPointValue(7, 0));
-		board.getPointValue(7, 0).setPiece(whiteRookLeft);
-		whitePieces.add(whiteRookLeft);
-		ChessPiece whiteKnightLeft = new Knight(Color.WHITE, board.getPointValue(7, 1));
-		board.getPointValue(7, 1).setPiece(whiteKnightLeft);
-		whitePieces.add(whiteKnightLeft);
-		ChessPiece whiteBishopLeft = new Bishop(Color.WHITE, board.getPointValue(7, 2));
-		board.getPointValue(7, 2).setPiece(whiteBishopLeft);
-		whitePieces.add(whiteBishopLeft);
-		ChessPiece whiteQueen = new Queen(Color.WHITE, board.getPointValue(7, 3));
-		board.getPointValue(7, 3).setPiece(whiteQueen);
-		whitePieces.add(whiteQueen);
-		ChessPiece whiteKing = new King(Color.WHITE, board.getPointValue(7, 4));
-		board.getPointValue(7, 4).setPiece(whiteKing);
-		whitePieces.add(whiteKing);
-		ChessPiece whiteBishopRight = new Bishop(Color.WHITE, board.getPointValue(7, 5));
-		board.getPointValue(7, 5).setPiece(whiteBishopRight);
-		whitePieces.add(whiteBishopRight);
-		ChessPiece whiteKnightRight = new Knight(Color.WHITE, board.getPointValue(7, 6));
-		board.getPointValue(7, 6).setPiece(whiteKnightRight);
-		whitePieces.add(whiteKnightRight);
-		ChessPiece whiteRookRight = new Rook(Color.WHITE, board.getPointValue(7, 7));
-		board.getPointValue(7, 7).setPiece(whiteRookRight);
-		whitePieces.add(whiteRookRight);
-
-		ChessPiece whitePawn = null;
-		for (int i = 0; i < board.getWidth(); i++) {
-			whitePawn = new Pawn(Color.WHITE, board.getPointValue(6, i), 1);
-			board.getPointValue(6, i).setPiece(whitePawn);
-			whitePieces.add(whitePawn);
-		}
-
-		ChessPlayer whitePlayer = new ChessPlayer(whitePieces, board);
+		board.setChessBoard();
 
 		final ChessComponent boardComponent = new ChessComponent(board);
-		boardComponent.addPlayer(blackPlayer);
-		boardComponent.addPlayer(whitePlayer);
 
 		class ChessMouseListener extends MouseAdapter {
 			public void mousePressed(MouseEvent e) {
@@ -199,5 +132,30 @@ public class ChessDisplay {
 		frame.setSize((board.getWidth() + 1) * boardComponent.getPointSize(), (board.getLength() + 1) * boardComponent.getPointSize());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+		
+
+		Object[] possibleValues = { "Human vs Human", "Human vs Computer", "Computer vs Computer" };
+		int gameValue = JOptionPane.showOptionDialog(null, "Choose an option", "Input", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+				possibleValues, possibleValues[0]);
+
+		ChessPlayer whitePlayer;
+		ChessPlayer blackPlayer;
+
+
+		if (gameValue == 0) {
+			whitePlayer = new ChessPlayer(Color.WHITE, board);
+			blackPlayer = new ChessPlayer(Color.BLACK, board);
+		}
+		else if (gameValue == 1) {
+			whitePlayer = new ChessPlayer(Color.WHITE, board);
+			blackPlayer = new ComputerPlayer(Color.BLACK, board);
+		}
+		else {
+			whitePlayer = new ComputerPlayer(Color.WHITE, board);
+			blackPlayer = new ComputerPlayer(Color.BLACK, board);
+		}
+		boardComponent.addPlayer(blackPlayer);
+		boardComponent.addPlayer(whitePlayer);
+		boardComponent.repaint();
 	}
 }

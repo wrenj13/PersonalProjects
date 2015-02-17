@@ -52,50 +52,6 @@ public class ChessBoardTest {
 	}
 
 	/**
-	 * A helper method to set up a standard chess board, with black pieces on top and white on bottom
-	 */
-	public void setChessBoard() {
-		ChessPiece blackRookLeft = new Rook(Color.BLACK, board.getPointValue(0, 0));
-		board.getPointValue(0, 0).setPiece(blackRookLeft);
-		ChessPiece blackKnightLeft = new Knight(Color.BLACK, board.getPointValue(0, 1));
-		board.getPointValue(0, 1).setPiece(blackKnightLeft);
-		ChessPiece blackBishopLeft = new Bishop(Color.BLACK, board.getPointValue(0, 2));
-		board.getPointValue(0, 2).setPiece(blackBishopLeft);
-		ChessPiece blackQueen = new Queen(Color.BLACK, board.getPointValue(0, 3));
-		board.getPointValue(0, 3).setPiece(blackQueen);
-		ChessPiece blackKing = new King(Color.BLACK, board.getPointValue(0, 4));
-		board.getPointValue(0, 4).setPiece(blackKing);
-		ChessPiece blackBishopRight = new Bishop(Color.BLACK, board.getPointValue(0, 5));
-		board.getPointValue(0, 5).setPiece(blackBishopRight);
-		ChessPiece blackKnightRight = new Knight(Color.BLACK, board.getPointValue(0, 6));
-		board.getPointValue(0, 6).setPiece(blackKnightRight);
-		ChessPiece blackRookRight = new Rook(Color.BLACK, board.getPointValue(0, 7));
-		board.getPointValue(0, 7).setPiece(blackRookRight);
-
-		ChessPiece whiteRookLeft = new Rook(Color.WHITE, board.getPointValue(7, 0));
-		board.getPointValue(7, 0).setPiece(whiteRookLeft);
-		ChessPiece whiteKnightLeft = new Knight(Color.WHITE, board.getPointValue(7, 1));
-		board.getPointValue(7, 1).setPiece(whiteKnightLeft);
-		ChessPiece whiteBishopLeft = new Bishop(Color.WHITE, board.getPointValue(7, 2));
-		board.getPointValue(7, 2).setPiece(whiteBishopLeft);
-		ChessPiece whiteQueen = new Queen(Color.WHITE, board.getPointValue(7, 3));
-		board.getPointValue(7, 3).setPiece(whiteQueen);
-		ChessPiece whiteKing = new King(Color.WHITE, board.getPointValue(7, 4));
-		board.getPointValue(7, 4).setPiece(whiteKing);
-		ChessPiece whiteBishopRight = new Bishop(Color.WHITE, board.getPointValue(7, 5));
-		board.getPointValue(7, 5).setPiece(whiteBishopRight);
-		ChessPiece whiteKnightRight = new Knight(Color.WHITE, board.getPointValue(7, 6));
-		board.getPointValue(7, 6).setPiece(whiteKnightRight);
-		ChessPiece whiteRookRight = new Rook(Color.WHITE, board.getPointValue(7, 7));
-		board.getPointValue(7, 7).setPiece(whiteRookRight);
-
-		for (int i = 0; i < board.getWidth(); i++) {
-			board.getPointValue(6, i).setPiece(new Pawn(Color.WHITE, board.getPointValue(6, i), 1));
-			board.getPointValue(1, i).setPiece(new Pawn(Color.BLACK, board.getPointValue(1, i), 0));
-		}
-	}
-
-	/**
 	 * Tests to make sure all fields are properly initialized, including row, column and default ChessSpace values
 	 */
 	@Test
@@ -145,7 +101,7 @@ public class ChessBoardTest {
 	 */
 	@Test
 	public void testClearPath() {
-		setChessBoard();
+		board.setChessBoard();
 		Queen whiteQueen = (Queen) board.getPointValue(7, 3).getPiece();
 		whiteQueen.moveTo(board.getPointValue(4, 3)); // teleport the Queen to the middle of the board to aid in testing
 
@@ -173,29 +129,18 @@ public class ChessBoardTest {
 		Knight whiteKnight = (Knight) board.getPointValue(7, 1).getPiece(); // test for knight
 		assertTrue(board.hasClearPath(whiteKnight, board.getPointValue(5, 0)));
 	}
-
+	
 	/**
-	 * Tests if the function returns true on allowable moves and false otherwise
+	 * Tests if the ArrayList the function returns contains the opponent pieces and no other pieces
 	 */
 	@Test
-	public void testCanMove() {
-		setChessBoard();
-		Queen whiteQueen = (Queen) board.getPointValue(7, 3).getPiece();
-		whiteQueen.moveTo(board.getPointValue(4, 3)); // teleport the Queen to the middle of the board to aid in testing
-		assertTrue(board.canMove(whiteQueen, board.getPointValue(2, 5))); // empty space (diagonal line to the above right of Queen)
-		assertTrue(board.canMove(whiteQueen, board.getPointValue(1, 6))); // capture space (diagonal line to the above right of Queen)
-		assertFalse(board.canMove(whiteQueen, board.getPointValue(0, 7))); // cannot capture space behind pawn (diagonal line to the above
-																			// right of Queen)
-
-		assertTrue(board.canMove(whiteQueen, board.getPointValue(5, 2))); // empty space (diagonal line to the below left of Queen)
-		assertFalse(board.canMove(whiteQueen, board.getPointValue(6, 1))); // cannot capture own pawn (diagonal line to the below left of
-																			// Queen)
-
-		assertFalse(board.canMove(whiteQueen, board.getPointValue(3, 5))); // cannot move to a space an L away from the Queen
-		assertFalse(board.canMove(whiteQueen, board.getPointValue(6, 2))); // invalid move away
-
-		assertFalse(board.canMove(whiteQueen, new ChessSpace(-1, 3))); // off the board
-		assertFalse(board.canMove(whiteQueen, new ChessSpace(4, 8))); // off the board
+	public void testGetPieces() {
+		board.setChessBoard();
+		ArrayList<ChessPiece> whitePieces = board.getPieces(Color.WHITE);
+		assertFalse(whitePieces.contains(board.getPointValue(0, 0).getPiece()));
+		assertFalse(whitePieces.contains(board.getPointValue(1, 6).getPiece()));
+		assertFalse(whitePieces.contains(board.getPointValue(4, 4).getPiece()));
+		assertTrue(whitePieces.contains(board.getPointValue(6, 2).getPiece()));
 	}
 
 	/**
@@ -203,7 +148,7 @@ public class ChessBoardTest {
 	 */
 	@Test
 	public void testGetOpponentPieces() {
-		setChessBoard();
+		board.setChessBoard();
 		ArrayList<ChessPiece> blackPieces = board.getOpponentPieces(Color.WHITE);
 		assertTrue(blackPieces.contains(board.getPointValue(0, 0).getPiece()));
 		assertTrue(blackPieces.contains(board.getPointValue(1, 6).getPiece()));
@@ -217,7 +162,7 @@ public class ChessBoardTest {
 	 */
 	@Test
 	public void testFindPossibleMovesSingle() {
-		setChessBoard();
+		board.setChessBoard();
 		Queen whiteQueen = (Queen) board.getPointValue(7, 3).getPiece();
 		whiteQueen.moveTo(board.getPointValue(4, 3)); // teleport the Queen to the middle of the board to aid in testing
 		ArrayList<ChessSpace> possibleMoves = board.findPossibleMoves(whiteQueen, false);
@@ -253,7 +198,7 @@ public class ChessBoardTest {
 	 */
 	@Test
 	public void testFindPossibleMovesArray() {
-		setChessBoard();
+		board.setChessBoard();
 		ArrayList<ChessPiece> pieces = new ArrayList<ChessPiece>();
 		Queen whiteQueen = (Queen) board.getPointValue(7, 3).getPiece();
 		whiteQueen.moveTo(board.getPointValue(4, 3)); // teleport the Queen to the middle of the board to aid in testing
@@ -296,7 +241,7 @@ public class ChessBoardTest {
 	 */
 	@Test
 	public void testFindPossibleMovesIgnoreColor() {
-		setChessBoard();
+		board.setChessBoard();
 		ArrayList<ChessPiece> pieces = new ArrayList<ChessPiece>();
 		Queen whiteQueen = (Queen) board.getPointValue(7, 3).getPiece();
 		whiteQueen.moveTo(board.getPointValue(4, 3)); // teleport the Queen to the middle of the board to aid in testing
@@ -341,7 +286,7 @@ public class ChessBoardTest {
 	 */
 	@Test
 	public void testFindCaptureMoves() {
-		setChessBoard();
+		board.setChessBoard();
 		ArrayList<ChessPiece> pieces = new ArrayList<ChessPiece>();
 		Queen whiteQueen = (Queen) board.getPointValue(7, 3).getPiece();
 		whiteQueen.moveTo(board.getPointValue(4, 3)); // teleport the Queen to the middle of the board to aid in testing
@@ -385,7 +330,7 @@ public class ChessBoardTest {
 	 */
 	@Test
 	public void testFindCaptureMovesIgnoreColor() {
-		setChessBoard();
+		board.setChessBoard();
 		ArrayList<ChessPiece> pieces = new ArrayList<ChessPiece>();
 		Queen whiteQueen = (Queen) board.getPointValue(7, 3).getPiece();
 		whiteQueen.moveTo(board.getPointValue(4, 3)); // teleport the Queen to the middle of the board to aid in testing

@@ -16,24 +16,15 @@ public class ComputerPlayer extends ChessPlayer {
 	private ArrayList<CaptureSpace> dangerSpaces = new ArrayList<CaptureSpace>();
 	private ChessPiece king;
 
-	public ComputerPlayer(ArrayList<ChessPiece> startingPieces, ChessBoard newBoard) {
-		super(startingPieces, newBoard);
+	public ComputerPlayer(Color color, ChessBoard newBoard) {
+		super(color, newBoard);
 		board = newBoard;
-		for (ChessPiece p : startingPieces) // should only be one king
+		for (ChessPiece p : getPieces()) // should only be one king
 		{
 			if (p instanceof King) {
 				king = p;
 			}
 		}
-	}
-
-	/**
-	 * Returns the king
-	 * 
-	 * @return the computer king
-	 */
-	public ChessPiece getKing() {
-		return king;
 	}
 
 	public boolean randomMove() {

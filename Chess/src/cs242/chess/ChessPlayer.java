@@ -1,5 +1,6 @@
 package cs242.chess;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import cs242.chess.pieces.ChessPiece;
@@ -25,8 +26,8 @@ public class ChessPlayer {
 	 * 
 	 * @param startingPieces the ArrayList of pieces the player has
 	 */
-	public ChessPlayer(ArrayList<ChessPiece> startingPieces, ChessBoard startingBoard) {
-		pieces = startingPieces;
+	public ChessPlayer(Color color, ChessBoard startingBoard) {
+		pieces = startingBoard.getPieces(color);
 		board = startingBoard;
 		for (ChessPiece p : pieces) {
 			if (p instanceof King) {
@@ -61,6 +62,14 @@ public class ChessPlayer {
 	 */
 	public void addPiece(ChessPiece piece) {
 		pieces.add(piece);
+	}
+	
+	/**
+	 * Returns the player's king
+	 * @return the player's king
+	 */
+	public King getKing() {
+		return king;
 	}
 	
 	/**

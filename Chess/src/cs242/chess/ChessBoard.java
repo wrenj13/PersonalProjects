@@ -3,8 +3,13 @@ package cs242.chess;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import cs242.chess.pieces.Bishop;
 import cs242.chess.pieces.ChessPiece;
+import cs242.chess.pieces.King;
 import cs242.chess.pieces.Knight;
+import cs242.chess.pieces.Pawn;
+import cs242.chess.pieces.Queen;
+import cs242.chess.pieces.Rook;
 
 /**
  * An implementation of a chess board using the Board interface. The board contains a 2-dimensional array of ChessSpaces. It contains
@@ -111,6 +116,35 @@ public class ChessBoard implements Board<ChessSpace> {
 		}
 	}
 
+	/**
+	 * Arranges pieces on the board according to a standard 8x8 Chess board.
+	 * It places the white pieces on the bottom and black pieces on the top.
+	 */
+	public void setChessBoard() {
+		getPointValue(0, 0).setPiece(new Rook(Color.BLACK, getPointValue(0, 0)));
+		getPointValue(0, 1).setPiece(new Knight(Color.BLACK, getPointValue(0, 1)));
+		getPointValue(0, 2).setPiece(new Bishop(Color.BLACK, getPointValue(0, 2)));
+		getPointValue(0, 3).setPiece(new Queen(Color.BLACK, getPointValue(0, 3)));
+		getPointValue(0, 4).setPiece(new King(Color.BLACK, getPointValue(0, 4)));
+		getPointValue(0, 5).setPiece(new Bishop(Color.BLACK, getPointValue(0, 5)));
+		getPointValue(0, 6).setPiece(new Knight(Color.BLACK, getPointValue(0, 6)));
+		getPointValue(0, 7).setPiece(new Rook(Color.BLACK, getPointValue(0, 7)));
+
+		getPointValue(7, 0).setPiece(new Rook(Color.WHITE, getPointValue(7, 0)));
+		getPointValue(7, 1).setPiece(new Knight(Color.WHITE, getPointValue(7, 1)));
+		getPointValue(7, 2).setPiece(new Bishop(Color.WHITE, getPointValue(7, 2)));
+		getPointValue(7, 3).setPiece(new Queen(Color.WHITE, getPointValue(7, 3)));
+		getPointValue(7, 4).setPiece(new King(Color.WHITE, getPointValue(7, 4)));
+		getPointValue(7, 5).setPiece(new Bishop(Color.WHITE, getPointValue(7, 5)));
+		getPointValue(7, 6).setPiece(new Knight(Color.WHITE, getPointValue(7, 6)));
+		getPointValue(7, 7).setPiece(new Rook(Color.WHITE, getPointValue(7, 7)));
+
+		for (int i = 0; i < getWidth(); i++) {
+			getPointValue(6, i).setPiece(new Pawn(Color.WHITE, getPointValue(6, i), 1));
+			getPointValue(1, i).setPiece(new Pawn(Color.BLACK, getPointValue(1, i), 0));
+		}
+	}
+	
 	/**
 	 * Checks whether or not a ChessPiece can proceed to a given space without being blocked by another ChessPiece. The method assumes that
 	 * the targetSpace is a valid target by the piece; i.e. the piece could move to that space if there were no obstacles.
@@ -222,29 +256,25 @@ public class ChessBoard implements Board<ChessSpace> {
 	}
 
 	/**
-	 * Checks if a piece can successfully be moved to another space. The method checks if the move is valid, if there is an open path and if
-	 * the new space is within the limits of the board. If there is a piece in the new space of the same color, the move is not allowed
+	 * Returns an ArrayList of all pieces on the board that are a given color
 	 * 
-	 * @param piece the piece to be moved
-	 * @param newSpace the ChessSpace the ChessPiece is moving to
-	 * @return true if the piece can be successfully moved, false otherwise
+	 * @param color The color of pieces to include
+	 * @return An ArrayList of pieces of the given color
 	 */
-	public boolean canMove(ChessPiece piece, ChessSpace newSpace) {
-		int targetRow = newSpace.getRow();
-		int targetCol = newSpace.getCol();
-		if (targetRow >= getLength() || targetRow < 0 || targetCol >= getWidth() || targetCol < 0) {
-			return false; // out of bounds
+	public ArrayList<ChessPiece> getPieces(Color color) {
+		ArrayList<ChessPiece> pieces = new ArrayList<ChessPiece>();
+		for (int i = 0; i < getLength(); i++) {
+			for (int j = 0; j < getWidth(); j++) {
+				if (getPointValue(i, j).getPiece() != null && getPointValue(i, j).getPiece().getColor() == color) // if opponent
+																													// piece
+				{
+					pieces.add(getPointValue(i, j).getPiece());
+				}
+			}
 		}
-		if (!piece.validMove(newSpace) || !hasClearPath(piece, newSpace)) {
-			return false; // not a valid move or no clear path
-		}
-		ChessPiece targetPiece = newSpace.getPiece();
-		if (targetPiece != null && targetPiece.getColor().equals(piece.getColor())) {
-			return false; // same color piece
-		}
-		return true;
+		return pieces;
 	}
-
+	
 	/**
 	 * Returns an ArrayList of all pieces on the board that are not the given color.
 	 * 
@@ -264,31 +294,6 @@ public class ChessBoard implements Board<ChessSpace> {
 			}
 		}
 		return opponentPieces;
-	}
-
-	/**
-	 * Finds all possible spaces a ChessPiece can move to on a given ChessBoard
-	 * This method accounts move validity, clear path, and enemy piece color (if applicable)
-	 * 
-	 * @param piece the piece that is moving
-	 * @param captureOnly true to only include the spaces where the piece can capture an enemy piece, false otherwise
-	 * @return an ArrayList of all spaces the piece can move to
-	 */
-	public ArrayList<ChessSpace> findPossibleMoves(ChessPiece piece, boolean captureOnly) {
-		ArrayList<ChessSpace> spaces = new ArrayList<ChessSpace>();
-		boolean captureCondition;
-		for (int i = 0; i < getLength(); i++) {
-			for (int j = 0; j < getWidth(); j++) {
-				ChessSpace targetSpace = getPointValue(i, j);
-				captureCondition = captureOnly? targetSpace.getPiece() != null : true;
-				// The move is valid if it is a valid space, there is a clear path, and if the space is empty or has an enemy
-				// piece.
-				if (canMove(piece, targetSpace) && captureCondition) {
-					spaces.add(getPointValue(i, j));
-				}
-			}
-		}
-		return spaces;
 	}
 
 	/**
@@ -373,7 +378,26 @@ public class ChessBoard implements Board<ChessSpace> {
 	public ArrayList<CaptureSpace> findCaptureMovesIgnoreColor(ArrayList<ChessPiece> pieces) {
 		return findPossibleMoves(pieces, true, true);
 	}
-
+	
+	/**
+	 * Finds all possible spaces a single ChessPiece can move to on a given ChessBoard
+	 * This method accounts move validity, clear path, and enemy piece color (if applicable)
+	 * 
+	 * @param piece the piece that is moving
+	 * @param captureOnly true to only include the spaces where the piece can capture an enemy piece, false otherwise
+	 * @return an ArrayList of all spaces the piece can move to
+	 */
+	public ArrayList<ChessSpace> findPossibleMoves(ChessPiece piece, boolean captureOnly) {
+		ArrayList<ChessPiece> pieces = new ArrayList<ChessPiece>();
+		pieces.add(piece);
+		ArrayList<CaptureSpace> possibleCaptureMoves = findPossibleMoves(pieces, false, captureOnly);
+		ArrayList<ChessSpace> possibleMoves = new ArrayList<ChessSpace>();
+		for (CaptureSpace cs : possibleCaptureMoves) {
+			possibleMoves.add(getPointValue(cs.getRow(), cs.getCol()));
+		}
+		return possibleMoves;
+	}
+	
 	/**
 	 * Iterates through an ArrayList<CaptureSpace> to find the corresponding CaptureSpace to a given ChessSpace That is, the returned
 	 * CaptureSpace has the same row and column as the ChessSpace If no space exists, return null
