@@ -3,6 +3,7 @@ package cs242.chess;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import cs242.chess.pieces.Boo;
 import cs242.chess.pieces.ChessPiece;
 import cs242.chess.pieces.King;
 import cs242.chess.pieces.Pawn;
@@ -21,10 +22,11 @@ public class ChessPlayer {
 	private King king;
 
 	/**
-	 * Constructor that receives an ArrayList of ChessPieces and stores them in data
+	 * Constructor that receives a color and a board. It finds all the pieces of that color on the board and stores them in an ArrayList 
 	 * It finds the king and stores it in data as well
 	 * 
-	 * @param startingPieces the ArrayList of pieces the player has
+	 * @param color the color of the pieces the player is using
+	 * @param startingBoard the board the player is playing on
 	 */
 	public ChessPlayer(Color color, ChessBoard startingBoard) {
 		pieces = startingBoard.getPieces(color);
@@ -63,19 +65,19 @@ public class ChessPlayer {
 	public void addPiece(ChessPiece piece) {
 		pieces.add(piece);
 	}
-	
+
 	/**
 	 * Returns the player's king
+	 * 
 	 * @return the player's king
 	 */
 	public King getKing() {
 		return king;
 	}
-	
+
 	/**
-	 * Tests if moving a piece to a target space puts the king in check
-	 * The method returns the ChessBoard to its original state at the end of the method
-	 * The method assumes that the move is valid, has a clear path and is of a different color
+	 * Tests if moving a piece to a target space puts the king in check The method returns the ChessBoard to its original state at the end
+	 * of the method The method assumes that the move is valid, has a clear path and is of a different color
 	 * 
 	 * @param piece the piece to be moved
 	 * @param targetSpace the space the piece wants to be moved to
@@ -95,15 +97,16 @@ public class ChessPlayer {
 		if (piece instanceof Pawn) {
 			currentPawn = (Pawn) piece;
 		}
-		if (currentPawn != null && ((currentPawn.getDirection() == 0 && targetSpace.getRow() == 7) || (currentPawn.getDirection() == 1 && targetSpace.getRow() == 0))) {
+		if (currentPawn != null
+				&& ((currentPawn.getDirection() == 0 && targetSpace.getRow() == 7) || (currentPawn.getDirection() == 1 && targetSpace
+						.getRow() == 0))) {
 			if (targetPiece != null) {
 				targetSpace.getPiece().setSpace(null);
 			}
 			targetSpace.setPiece(piece);
 			piece.getSpace().setPiece(null);
 			piece.setSpace(targetSpace);
-		}
-		else { // otherwise use the abstract method to move the piece (and remove the piece there)
+		} else { // otherwise use the abstract method to move the piece (and remove the piece there)
 			piece.moveTo(targetSpace);
 		}
 		// check if in check
@@ -113,14 +116,21 @@ public class ChessPlayer {
 		piece.moveTo(originalSpace);
 		// undo capture and re-add piece. If there is no piece there, targetSpace will have its piece set to null
 		if (targetPiece != null) {
+			// if the piece is a Boo, undo the absorption
+			if (piece instanceof Boo) {
+				Boo boo = (Boo) piece;
+				boo.getCaptured().remove(targetPiece);
+				boo.setValue(boo.getValue() - targetPiece.getValue());
+			}
 			targetPiece.moveTo(targetSpace);
+
 		}
-		return canCaptureKing == null? false : true;
+		return canCaptureKing == null ? false : true;
 	}
-	
+
 	/**
-	 * Returns a list of all valid moves a player can make according to the rules of chess
-	 * This accounts for putting the King in check
+	 * Returns a list of all valid moves a player can make according to the rules of chess This accounts for putting the King in check
+	 * 
 	 * @return an ArrayList of all the moves the player can make
 	 */
 	public ArrayList<CaptureSpace> getPossibleMoves() {
@@ -131,8 +141,9 @@ public class ChessPlayer {
 		for (int spaceIndex = possibleMoves.size() - 1; spaceIndex >= 0; spaceIndex--) {
 			CaptureSpace currentSpace = possibleMoves.get(spaceIndex);
 			for (int pieceIndex = currentSpace.getPieces().size() - 1; pieceIndex >= 0; pieceIndex--) {
-					if (moveLeavesKingInCheck(currentSpace.getPieces().get(pieceIndex), board.getPointValue(currentSpace.getRow(), currentSpace.getCol()))) {
-						currentSpace.getPieces().remove(pieceIndex);
+				if (moveLeavesKingInCheck(currentSpace.getPieces().get(pieceIndex),
+						board.getPointValue(currentSpace.getRow(), currentSpace.getCol()))) {
+					currentSpace.getPieces().remove(pieceIndex);
 				}
 			}
 			if (currentSpace.getPieces().size() == 0) {

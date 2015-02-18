@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 import cs242.chess.pieces.Bishop;
+import cs242.chess.pieces.Boo;
 import cs242.chess.pieces.ChessPiece;
 import cs242.chess.pieces.King;
 import cs242.chess.pieces.Knight;
@@ -146,6 +147,17 @@ public class ChessBoard implements Board<ChessSpace> {
 	}
 	
 	/**
+	 * Adds new pieces to the Chess board, including Boo and Riven pieces
+	 */
+	public void addNewPieces() {
+		getPointValue(1, 1).setPiece(new Boo(Color.BLACK, getPointValue(1, 1)));
+	//	getPointValue(1, 6).setPiece(new Riven(Color.BLACK, getPointValue(1, 6)));
+	//	getPointValue(6, 1).setPiece(new Riven(Color.BLACK, getPointValue(6, 1)));
+		getPointValue(6, 6).setPiece(new Boo(Color.WHITE, getPointValue(6, 6)));
+
+	}
+	
+	/**
 	 * Checks whether or not a ChessPiece can proceed to a given space without being blocked by another ChessPiece. The method assumes that
 	 * the targetSpace is a valid target by the piece; i.e. the piece could move to that space if there were no obstacles.
 	 * 
@@ -173,8 +185,8 @@ public class ChessBoard implements Board<ChessSpace> {
 	 * A helper method that determines if a piece moving in a vertical or horizontal line from the current space can proceed to the target
 	 * space without running into another piece
 	 * 
-	 * @param curRow the row index of the current space
-	 * @param curCol the column index of the current space
+	 * @param currentRow the row index of the current space
+	 * @param currentCol the column index of the current space
 	 * @param targetRow the row index of the target space
 	 * @param targetCol the column index of the target space
 	 * @return True if the piece can proceed without obstacle, false otherwise.
@@ -216,8 +228,8 @@ public class ChessBoard implements Board<ChessSpace> {
 	 * A helper method that determines if a piece moving in a diagonal line from the current space can proceed to the target space without
 	 * running into another piece. It does not check whether or not the space has a piece on it currently
 	 * 
-	 * @param curRow the row index of the current space
-	 * @param curCol the column index of the current space
+	 * @param currentRow the row index of the current space
+	 * @param currentCol the column index of the current space
 	 * @param targetRow the row index of the target space
 	 * @param targetCol the column index of the target space
 	 * @return True if the piece can proceed without obstacle, false otherwise.
@@ -304,7 +316,7 @@ public class ChessBoard implements Board<ChessSpace> {
 	 * 
 	 * @param pieces The pieces that are moving
 	 * @param ignoreColor true if the result includes spaces where pieces "capture" pieces of the same color
-	 * @param
+	 * @param captureMove true if the result only includes spaces where the pieces capture, false otherwise
 	 * @return an ArrayList containing all possible spaces.
 	 */
 	public ArrayList<CaptureSpace> findPossibleMoves(ArrayList<ChessPiece> pieces, boolean ignoreColor, boolean captureMove) {

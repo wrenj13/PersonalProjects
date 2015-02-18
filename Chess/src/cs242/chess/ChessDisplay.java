@@ -33,6 +33,7 @@ public class ChessDisplay {
 
 		// First, we put all the pieces on the board.
 		board.setChessBoard();
+		board.addNewPieces();
 
 		final ChessComponent boardComponent = new ChessComponent(board);
 
@@ -49,12 +50,16 @@ public class ChessDisplay {
 
 			public void mouseReleased(MouseEvent e) {
 				if (currentPiece == null) {
+					System.out.println("null piece");
 					return;
 				}
 				int y = e.getY() - 30;
 				int x = e.getX() - 10;
 				int row = y / boardComponent.getPointSize();
 				int col = x / boardComponent.getPointSize();
+				if (row >= board.getLength() || row < 0 || col >= board.getWidth() || col < 0) {
+					return;
+				}
 				ChessPlayer currentPlayer = boardComponent.getPlayer(currentPlayerIndex);
 				ArrayList<CaptureSpace> possibleMoves = currentPlayer.getPossibleMoves();
 				ChessSpace targetSpace = board.getPointValue(row, col); // This is the space the current player wants to move to

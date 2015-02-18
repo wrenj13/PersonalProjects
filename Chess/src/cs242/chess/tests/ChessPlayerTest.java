@@ -21,6 +21,12 @@ import cs242.chess.pieces.Pawn;
 import cs242.chess.pieces.Queen;
 import cs242.chess.pieces.Rook;
 
+/**
+ * A class to test the ChessPlayer class
+ * 
+ * @author REN-JAY_2
+ * 
+ */
 public class ChessPlayerTest {
 
 	private static ChessPlayer player;
@@ -35,7 +41,7 @@ public class ChessPlayerTest {
 	public static void setUpBeforeClass() throws Exception {
 		board = new ChessBoard();
 	}
-	
+
 	/**
 	 * Initializes the ChessBoard and the Player array before every test
 	 * 
@@ -57,7 +63,7 @@ public class ChessPlayerTest {
 	public void tearDown() throws Exception {
 		board.clear();
 	}
-	
+
 	/**
 	 * Tests if the possible moves array contains all the possible moves.
 	 */
@@ -71,13 +77,15 @@ public class ChessPlayerTest {
 		assertEquals(possibleMoves.size(), 17);
 		assertNotNull(board.findCaptureSpace(possibleMoves, board.getPointValue(3, 3)));
 		assertNotNull(board.findCaptureSpace(possibleMoves, board.getPointValue(7, 1)));
-		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(4, 4)).getPieces().contains(board.getPointValue(6, 4).getPiece()));
-		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(4, 4)).getPieces().contains(board.getPointValue(5, 2).getPiece()));
+		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(4, 4)).getPieces()
+				.contains(board.getPointValue(6, 4).getPiece()));
+		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(4, 4)).getPieces()
+				.contains(board.getPointValue(5, 2).getPiece()));
 	}
-	
+
 	/**
-	 * Tests if the possible moves array only contains move that bring the king out of check when it is in check
-	 * This method implicitly tests moveLeavesKingInCheck
+	 * Tests if the possible moves array only contains move that bring the king out of check when it is in check This method implicitly
+	 * tests moveLeavesKingInCheck
 	 */
 	@Test
 	public void testGetMovesInCheck() {
@@ -92,12 +100,16 @@ public class ChessPlayerTest {
 		assertNotNull(board.findCaptureSpace(possibleMoves, board.getPointValue(5, 2)));
 		assertNotNull(board.findCaptureSpace(possibleMoves, board.getPointValue(6, 3)));
 		assertNotNull(board.findCaptureSpace(possibleMoves, board.getPointValue(6, 4)));
-		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(5, 2)).getPieces().contains(board.getPointValue(7, 1).getPiece()));
-		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(5, 2)).getPieces().contains(board.getPointValue(6, 1).getPiece()));
-		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(6, 3)).getPieces().contains(board.getPointValue(7, 2).getPiece()));
-		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(6, 4)).getPieces().contains(board.getPointValue(7, 4).getPiece()));
+		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(5, 2)).getPieces()
+				.contains(board.getPointValue(7, 1).getPiece()));
+		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(5, 2)).getPieces()
+				.contains(board.getPointValue(6, 1).getPiece()));
+		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(6, 3)).getPieces()
+				.contains(board.getPointValue(7, 2).getPiece()));
+		assertTrue(board.findCaptureSpace(possibleMoves, board.getPointValue(6, 4)).getPieces()
+				.contains(board.getPointValue(7, 4).getPiece()));
 	}
-	
+
 	/**
 	 * Tests if the possible moves array is empty on checkmate
 	 */
@@ -111,7 +123,7 @@ public class ChessPlayerTest {
 		ArrayList<CaptureSpace> possibleMoves = player.getPossibleMoves();
 		assertEquals(possibleMoves.size(), 0); // should have 0 possible spaces to move to
 	}
-	
+
 	/**
 	 * Tests if the possible moves array is empty on checkmate
 	 */

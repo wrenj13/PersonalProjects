@@ -108,7 +108,6 @@ public abstract class ChessPiece {
 	 * a piece in the new ChessSpace of another color, it is captured and its space data is set to null. The method does not check if the
 	 * move is allowed or not. Use in conjunction with canMove() in the ChessBoard class to check
 	 * 
-	 * @param piece the piece to be moved
 	 * @param newSpace the space to move the piece to
 	 */
 	public void moveTo(ChessSpace newSpace) {
