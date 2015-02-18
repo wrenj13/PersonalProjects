@@ -32,7 +32,6 @@ public class ChessDisplay {
 		final JFrame frame = new JFrame("Chess");
 
 		final ChessBoard board = new ChessBoard();
-		System.out.println("the board " + board);
 
 		// First, we put all the pieces on the board.
 		board.setChessBoard();
@@ -63,16 +62,12 @@ public class ChessDisplay {
 					return;
 				}
 				ChessPlayer currentPlayer = boardComponent.getPlayer(currentPlayerIndex);
-				ArrayList<CaptureSpace> possibleMoves = currentPlayer.getPossibleMoves();
 				ChessSpace targetSpace = board.getPointValue(row, col); // This is the space the current player wants to move to
-				CaptureSpace targetSpaceWithPossiblePieces = board.findCaptureSpace(possibleMoves, targetSpace);
-				if (targetSpaceWithPossiblePieces == null) { // move not allowed
-					boardComponent.repaint();
+				ArrayList<ChessSpace> spaces = board.findPossibleMoves(currentPiece, false); // the list of moves the piece can make
+				if (!spaces.contains(targetSpace)) { // move not allowed
 					return;
 				}
-				// does the piece being move exist in there
-				if (!targetSpaceWithPossiblePieces.getPieces().contains(currentPiece)) {
-					boardComponent.repaint();
+				if (currentPlayer.moveLeavesKingInCheck(currentPiece, targetSpace)) { // move leaves king in check
 					return;
 				}
 				// move is legitimate
