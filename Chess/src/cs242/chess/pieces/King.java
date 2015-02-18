@@ -55,5 +55,14 @@ public class King extends ChessPiece {
 		}
 		return true;
 	}
-
+	
+	/**
+	 * Returns a deep copy of the King
+	 * Note that we don't set the King's space because there is no point in doing so without relation to a Board
+	 * 
+	 * @return A deep copy of the King
+	 */
+	public ChessPiece copy() {
+		return new King(getColor(), null);
+	}
 }

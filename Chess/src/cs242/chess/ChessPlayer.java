@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import cs242.chess.pieces.Boo;
 import cs242.chess.pieces.ChessPiece;
+import cs242.chess.pieces.Exile;
 import cs242.chess.pieces.King;
 import cs242.chess.pieces.Pawn;
 
@@ -22,8 +23,8 @@ public class ChessPlayer {
 	private King king;
 
 	/**
-	 * Constructor that receives a color and a board. It finds all the pieces of that color on the board and stores them in an ArrayList 
-	 * It finds the king and stores it in data as well
+	 * Constructor that receives a color and a board. It finds all the pieces of that color on the board and stores them in an ArrayList It
+	 * finds the king and stores it in data as well
 	 * 
 	 * @param color the color of the pieces the player is using
 	 * @param startingBoard the board the player is playing on
@@ -46,6 +47,15 @@ public class ChessPlayer {
 	 */
 	public ArrayList<ChessPiece> getPieces() {
 		return pieces;
+	}
+
+	/**
+	 * Sets the pieces ArrayList to a new ArrayList
+	 * 
+	 * @param newPieces the new ArrayList of pieces
+	 */
+	public void setPieces(ArrayList<ChessPiece> newPieces) {
+		pieces = newPieces;
 	}
 
 	/**
@@ -84,7 +94,12 @@ public class ChessPlayer {
 	 * @return true if after the move the king is in check, false otherwise
 	 */
 	public boolean moveLeavesKingInCheck(ChessPiece piece, ChessSpace targetSpace) {
-		ChessPiece targetPiece = targetSpace.getPiece(); // This is the piece at the targetSpace (can be null)
+		if (piece instanceof Exile) {
+			ChessBoard testBoard = (ChessBoard) board.copy();
+			ChessSpace testSpace = testBoard.getPointValue(piece.getSpace().getRow(), piece.getSpace().getCol());
+			return moveLeavesKingInCheck(testBoard, testSpace.getPiece(), testBoard.getPointValue(targetSpace.getRow(), targetSpace.getCol()));
+		}
+		ChessPiece targetPiece = targetSpace.getPiece(); // This is the piece at the targetSpace (can be null)}
 		ChessSpace originalSpace = piece.getSpace();
 		ArrayList<ChessPiece> opponentPieces = board.getOpponentPieces(piece.getColor());
 		ArrayList<CaptureSpace> dangerSpaces = board.findPossibleMoves(opponentPieces);
@@ -122,9 +137,31 @@ public class ChessPlayer {
 				boo.getCaptured().remove(targetPiece);
 				boo.setValue(boo.getValue() - targetPiece.getValue());
 			}
-			targetPiece.moveTo(targetSpace);
-
+			targetPiece.generalMoveTo(targetSpace);
 		}
+		return canCaptureKing == null ? false : true;
+	}
+
+	/**
+	 * A more inefficient but conceptually simpler and more bug-free way of checking if moving to a space leaves the king in check
+	 * The method makes a copy of the ChessBoard. We only use this method when it is easier to code and debug
+	 * Otherwise, the checking takes too long
+	 * 
+	 * @param testBoard the copy of the ChessBoard used to test on
+	 * @param piece the piece to move
+	 * @param targetSpace the space to move the piece to
+	 * @return true if after the move the king is in check, false otherwise
+	 */
+	public boolean moveLeavesKingInCheck(ChessBoard testBoard, ChessPiece piece, ChessSpace targetSpace) {
+		ArrayList<ChessPiece> opponentPieces = testBoard.getOpponentPieces(piece.getColor());
+		ArrayList<CaptureSpace> dangerSpaces = testBoard.findPossibleMoves(opponentPieces);
+		piece.moveTo(targetSpace);
+		// remake opponent list
+		opponentPieces = testBoard.getOpponentPieces(piece.getColor());
+		// check if in check
+		dangerSpaces = testBoard.findPossibleMoves(opponentPieces);
+		CaptureSpace canCaptureKing = testBoard.findCaptureSpace(dangerSpaces, king.getSpace());
+		testBoard.clear();
 		return canCaptureKing == null ? false : true;
 	}
 

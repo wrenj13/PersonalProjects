@@ -73,8 +73,8 @@ public class ChessBoardTest {
 		board.getPointValue(5, 6).setPiece(piece);
 		ChessBoard copyBoard = (ChessBoard) board.copy();
 		assertNotSame(board, copyBoard);
-		assertSame(board.getPointValue(5, 6), copyBoard.getPointValue(5, 6));
-		assertSame(board.getPointValue(5, 6).getPiece(), copyBoard.getPointValue(5, 6).getPiece());
+		assertNotSame(board.getPointValue(5, 6), copyBoard.getPointValue(5, 6));
+		assertNotSame(board.getPointValue(5, 6).getPiece(), copyBoard.getPointValue(5, 6).getPiece());
 		assertEquals(board.getLength(), copyBoard.getLength());
 		assertEquals(board.getWidth(), copyBoard.getWidth());
 		assertEquals(board.getPointValue(5, 6).getRow(), copyBoard.getPointValue(5, 6).getRow());

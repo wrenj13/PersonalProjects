@@ -54,4 +54,14 @@ public class Knight extends ChessPiece {
 		}
 		return true;
 	}
+	
+	/**
+	 * Returns a deep copy of the Knight
+	 * Note that we don't set the Knight's space because there is no point in doing so without relation to a Board
+	 * 
+	 * @return A deep copy of the Knight
+	 */
+	public ChessPiece copy() {
+		return new Knight(getColor(), null);
+	}
 }

@@ -106,7 +106,7 @@ public abstract class ChessPiece {
 	/**
 	 * Moves the ChessPiece to a new ChessSpace, taking care to account for the data in both the ChessPiece and the ChessSpaces. If there is
 	 * a piece in the new ChessSpace of another color, it is captured and its space data is set to null. The method does not check if the
-	 * move is allowed or not. Use in conjunction with canMove() in the ChessBoard class to check
+	 * move is allowed or not.
 	 * 
 	 * @param newSpace the space to move the piece to
 	 */
@@ -121,4 +121,31 @@ public abstract class ChessPiece {
 		}
 		setSpace(newSpace);
 	}
+	
+	/**
+	 * Moves the ChessPiece to a new ChessSpace, taking care to account for the data in both the ChessPiece and the ChessSpaces. If there is
+	 * a piece in the new ChessSpace of another color, it is captured and its space data is set to null. The method does not check if the
+	 * move is allowed or not.
+	 * This method should not be overwritten; it is a way for ChessPiece's to be moved without regard to their subclass
+	 * 
+	 * @param newSpace the space to move the piece to
+	 */
+	public void generalMoveTo(ChessSpace newSpace) {
+		ChessPiece targetPiece = newSpace.getPiece();
+		if (targetPiece != null) {
+			newSpace.getPiece().setSpace(null);
+		}
+		newSpace.setPiece(this);
+		if (getSpace() != null) {
+			getSpace().setPiece(null);
+		}
+		setSpace(newSpace);
+	}
+	
+	/**
+	 * Returns a deep copy of the ChessPiece
+	 * 
+	 * @return a deep copy of the ChessPiece
+	 */
+	public abstract ChessPiece copy();
 }

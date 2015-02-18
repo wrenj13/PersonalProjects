@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import cs242.chess.pieces.Bishop;
 import cs242.chess.pieces.Boo;
 import cs242.chess.pieces.ChessPiece;
+import cs242.chess.pieces.Exile;
 import cs242.chess.pieces.King;
 import cs242.chess.pieces.Knight;
 import cs242.chess.pieces.Pawn;
@@ -92,7 +93,7 @@ public class ChessBoard implements Board<ChessSpace> {
 	}
 
 	/**
-	 * Makes a deep copy of the board with a shallow copy of the ChessPieces.
+	 * Makes a deep copy of the board with a deep copy of the ChessPieces.
 	 * 
 	 * @return A deep copy of the ChessBoard. Note that the copy returned is of type ChessBoard, a subclass of Board<ChessSpace>
 	 */
@@ -100,7 +101,13 @@ public class ChessBoard implements Board<ChessSpace> {
 		ChessBoard newBoard = new ChessBoard(getLength(), getWidth());
 		for (int i = 0; i < getLength(); i++) {
 			for (int j = 0; j < getWidth(); j++) {
-				newBoard.setPointValue(i, j, getPointValue(i, j));
+				if (getPointValue(i, j).getPiece() != null) {
+					newBoard.getPointValue(i, j).setPiece(getPointValue(i, j).getPiece().copy());
+					newBoard.getPointValue(i, j).getPiece().setSpace(newBoard.getPointValue(i, j));
+					if (newBoard.getPointValue(i, j).getPiece() instanceof Exile) {
+						((Exile) newBoard.getPointValue(i, j).getPiece()).setBoard(newBoard);
+					}
+				}
 			}
 		}
 		return newBoard;
@@ -151,8 +158,8 @@ public class ChessBoard implements Board<ChessSpace> {
 	 */
 	public void addNewPieces() {
 		getPointValue(1, 1).setPiece(new Boo(Color.BLACK, getPointValue(1, 1)));
-	//	getPointValue(1, 6).setPiece(new Riven(Color.BLACK, getPointValue(1, 6)));
-	//	getPointValue(6, 1).setPiece(new Riven(Color.BLACK, getPointValue(6, 1)));
+		getPointValue(1, 6).setPiece(new Exile(Color.BLACK, getPointValue(1, 6), this));
+		getPointValue(6, 1).setPiece(new Exile(Color.WHITE, getPointValue(6, 1), this));
 		getPointValue(6, 6).setPiece(new Boo(Color.WHITE, getPointValue(6, 6)));
 
 	}
@@ -168,11 +175,16 @@ public class ChessBoard implements Board<ChessSpace> {
 	public boolean hasClearPath(ChessPiece piece, ChessSpace targetSpace) {
 		if (piece instanceof Knight) { // Knights do not get blocked by other pieces
 			return true;
-		} // All other pieces move in a straight line to their target.
+		} 
 		int currentRow = piece.getSpace().getRow();
 		int currentCol = piece.getSpace().getCol();
 		int targetRow = targetSpace.getRow();
 		int targetCol = targetSpace.getCol();
+		int rowDifference = Math.abs(targetRow - currentRow);
+		int colDifference = Math.abs(targetCol - currentCol);
+		if (piece instanceof Exile && (rowDifference > 1 || colDifference > 1)) { // fired a shockwave
+			return true;
+		}	// All other pieces move in a straight line to their target.
 		// First test if the path is in the same vertical or horizontal line as the piece.
 		if (targetSpace.getRow() == piece.getSpace().getRow() || targetSpace.getCol() == piece.getSpace().getCol()) {
 			return hasClearPathVertHorizontal(currentRow, currentCol, targetRow, targetCol);
@@ -286,7 +298,7 @@ public class ChessBoard implements Board<ChessSpace> {
 		}
 		return pieces;
 	}
-	
+
 	/**
 	 * Returns an ArrayList of all pieces on the board that are not the given color.
 	 * 

@@ -53,5 +53,14 @@ public class Bishop extends ChessPiece {
 		}
 		return true;
 	}
-
+	
+	/**
+	 * Returns a deep copy of the Bishop
+	 * Note that we don't set the Bishop's space because there is no point in doing so without relation to a Board
+	 * 
+	 * @return A deep copy of the Bishop
+	 */
+	public ChessPiece copy() {
+		return new Bishop(getColor(), null);
+	}
 }

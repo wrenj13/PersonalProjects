@@ -137,4 +137,14 @@ public class Pawn extends ChessPiece {
 			}
 		}
 	}
+	
+	/**
+	 * Returns a deep copy of the Pawn
+	 * Note that we don't set the Pawn's space because there is no point in doing so without relation to a Board
+	 * 
+	 * @return A deep copy of the Pawn
+	 */
+	public ChessPiece copy() {
+		return new Pawn(getColor(), null, getDirection());
+	}
 }

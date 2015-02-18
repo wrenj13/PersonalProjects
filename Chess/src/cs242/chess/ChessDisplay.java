@@ -20,6 +20,8 @@ import cs242.chess.pieces.Knight;
 import cs242.chess.pieces.Pawn;
 import cs242.chess.pieces.Queen;
 import cs242.chess.pieces.Rook;
+import cs242.chess.pieces.Exile;
+
 
 public class ChessDisplay {
 
@@ -30,6 +32,7 @@ public class ChessDisplay {
 		final JFrame frame = new JFrame("Chess");
 
 		final ChessBoard board = new ChessBoard();
+		System.out.println("the board " + board);
 
 		// First, we put all the pieces on the board.
 		board.setChessBoard();
@@ -50,7 +53,6 @@ public class ChessDisplay {
 
 			public void mouseReleased(MouseEvent e) {
 				if (currentPiece == null) {
-					System.out.println("null piece");
 					return;
 				}
 				int y = e.getY() - 30;
@@ -77,10 +79,21 @@ public class ChessDisplay {
 				ChessPiece targetPiece = targetSpace.getPiece();
 				currentPiece.moveTo(targetSpace);
 				// remove the eliminated piece if piece was taken
-				if (targetPiece != null) {
-					for (ChessPlayer p : boardComponent.getPlayerList()) {
-						if (p.getPieces().contains(targetPiece)) {
-							p.removePiece(targetPiece);
+				if (currentPiece instanceof Exile) {
+					// recalculate pieces array
+					for (int i = currentPlayerIndex + 1; i != currentPlayerIndex; i++) {
+						if (i >= boardComponent.getPlayerList().size()) {
+							i %= boardComponent.getPlayerList().size();
+						}
+						ChessPlayer otherPlayer = boardComponent.getPlayer(i);
+						otherPlayer.setPieces(board.getPieces(otherPlayer.getKing().getColor()));
+					}
+				} else { // if not Exile, do this for efficiency
+					if (targetPiece != null) {
+						for (ChessPlayer p : boardComponent.getPlayerList()) {
+							if (p.getPieces().contains(targetPiece)) {
+								p.removePiece(targetPiece);
+							}
 						}
 					}
 				}

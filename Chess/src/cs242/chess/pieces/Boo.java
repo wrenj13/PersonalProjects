@@ -20,6 +20,12 @@ public class Boo extends ChessPiece {
 
 	private ArrayList<ChessPiece> captured;
 	
+	/**
+	 * Constructs a Boo object. Initializes the captured ArrayList
+	 * 
+	 * @param color the color of the Boo
+	 * @param space the space the Boo begins on
+	 */
 	public Boo(Color color, ChessSpace space) {
 		super(color, space);
 		Image booImage = null;
@@ -42,6 +48,15 @@ public class Boo extends ChessPiece {
 		return captured;
 	}
 	
+	/**
+	 * Sets the captured ArrayList to a new ArrayList
+	 * 
+	 * @param newCaptured the new ArrayList of captured pieces
+	 * @param newCaptured
+	 */
+	public void setCaptured(ArrayList<ChessPiece> newCaptured) {
+		captured = newCaptured;
+	}
 	
 	/**
 	 * Checks if the Boo can move to the desired space
@@ -87,5 +102,21 @@ public class Boo extends ChessPiece {
 			setValue(getValue() + targetPiece.getValue());
 		}
 		super.moveTo(newSpace);
+	}
+	
+	/**
+	 * Returns a deep copy of the Boo
+	 * Note that we don't set the Boo's space because there is no point in doing so without relation to a Board
+	 * 
+	 * @return A deep copy of the Boo
+	 */
+	public ChessPiece copy() {
+		Boo copyBoo = new Boo(getColor(), null);
+		ArrayList<ChessPiece> newCaptured = new ArrayList<ChessPiece>();
+		for (ChessPiece p : getCaptured()) {
+			newCaptured.add(p.copy());
+		}
+		copyBoo.setCaptured(newCaptured);
+		return copyBoo;
 	}
 }
