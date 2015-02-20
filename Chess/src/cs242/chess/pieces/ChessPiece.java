@@ -8,7 +8,7 @@ import cs242.chess.ChessSpace;
 
 /**
  * A class to implement a Chess piece. It holds the ChessSpace that it is currently on. The user needs to take care to update the
- * ChessPiece's space data whenever the piece moves. It also includes the image used to draw it with the Java API
+ * ChessPiece's space data whenever the piece moves. It also includes the image used to draw it with the Java API.
  * 
  * @author REN-JAY_2
  * 
@@ -32,7 +32,7 @@ public abstract class ChessPiece {
 	}
 
 	/**
-	 * Returns the space the ChessPiece is on
+	 * Returns the space the ChessPiece is on.
 	 * 
 	 * @return the space the ChessPiece is on
 	 */
@@ -41,7 +41,7 @@ public abstract class ChessPiece {
 	}
 
 	/**
-	 * Returns the color of the ChessPiece
+	 * Returns the color of the ChessPiece.
 	 * 
 	 * @return the color of the ChessPiece
 	 */
@@ -50,7 +50,7 @@ public abstract class ChessPiece {
 	}
 
 	/**
-	 * Returns the Graphics image used to represent the ChessPiece in the GUI
+	 * Returns the Graphics image used to represent the ChessPiece in the GUI.
 	 * 
 	 * @return the Graphic used to represent the ChessPiece
 	 */
@@ -59,7 +59,7 @@ public abstract class ChessPiece {
 	}
 
 	/**
-	 * The relative value of the ChessPiece
+	 * The relative value of the ChessPiece.
 	 * 
 	 * @return the value
 	 */
@@ -68,7 +68,7 @@ public abstract class ChessPiece {
 	}
 
 	/**
-	 * Sets the space the ChessPiece is on
+	 * Sets the space the ChessPiece is on.
 	 * 
 	 * @param newSpace the new space the ChessPiece is on
 	 */
@@ -77,7 +77,7 @@ public abstract class ChessPiece {
 	}
 
 	/**
-	 * Sets the image used to represent the ChessPiece in the GUI
+	 * Sets the image used to represent the ChessPiece in the GUI.
 	 * 
 	 * @param newImage the new image used to represent the ChessPiece
 	 */
@@ -86,7 +86,7 @@ public abstract class ChessPiece {
 	}
 
 	/**
-	 * Sets the relative value of the ChessPiece
+	 * Sets the relative value of the ChessPiece.
 	 * 
 	 * @param newValue the new value
 	 */
@@ -95,8 +95,8 @@ public abstract class ChessPiece {
 	}
 
 	/**
-	 * Determines whether or not the piece can move to another ChessSpace This method assumes that there are no pieces in the way. The
-	 * method leaves the determination of board limits to the game loop
+	 * Determines whether or not the piece can move to another ChessSpace. This method assumes that there are no pieces in the way. The
+	 * method leaves the determination of board limits to the game loop.
 	 * 
 	 * @param newSpace the space the piece wants to go to
 	 * @return true if the piece can move there, false otherwise
@@ -121,16 +121,16 @@ public abstract class ChessPiece {
 		}
 		setSpace(newSpace);
 	}
-	
+
 	/**
 	 * Moves the ChessPiece to a new ChessSpace, taking care to account for the data in both the ChessPiece and the ChessSpaces. If there is
 	 * a piece in the new ChessSpace of another color, it is captured and its space data is set to null. The method does not check if the
-	 * move is allowed or not.
-	 * This method should not be overwritten; it is a way for ChessPiece's to be moved without regard to their subclass
+	 * move is allowed or not. This method should not be overwritten; it is a way for ChessPiece's to be moved without regard to their
+	 * subclass.
 	 * 
 	 * @param newSpace the space to move the piece to
 	 */
-	public void generalMoveTo(ChessSpace newSpace) {
+	public final void generalMoveTo(ChessSpace newSpace) {
 		ChessPiece targetPiece = newSpace.getPiece();
 		if (targetPiece != null) {
 			newSpace.getPiece().setSpace(null);
@@ -141,9 +141,9 @@ public abstract class ChessPiece {
 		}
 		setSpace(newSpace);
 	}
-	
+
 	/**
-	 * Returns a deep copy of the ChessPiece
+	 * Returns a deep copy of the ChessPiece.
 	 * 
 	 * @return a deep copy of the ChessPiece
 	 */

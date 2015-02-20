@@ -11,7 +11,7 @@ import cs242.chess.pieces.Pawn;
 
 /**
  * Contains the implementation for a human player. The class contains an ArrayList of all pieces that the player has; as pieces are taken,
- * they will be removed from this list. It also keeps track of the player's king object, assuming it is included in the ArrayList,
+ * they will be removed from this list. It also keeps track of the player's king object, assuming it is included in the ArrayList.
  * 
  * @author REN-JAY_2
  * 
@@ -23,8 +23,8 @@ public class ChessPlayer {
 	private King king;
 
 	/**
-	 * Constructor that receives a color and a board. It finds all the pieces of that color on the board and stores them in an ArrayList It
-	 * finds the king and stores it in data as well
+	 * Constructor that receives a color and a board. It finds all the pieces of that color on the board and stores them in an ArrayList. It
+	 * finds the king and stores it in data as well.
 	 * 
 	 * @param color the color of the pieces the player is using
 	 * @param startingBoard the board the player is playing on
@@ -41,7 +41,7 @@ public class ChessPlayer {
 	}
 
 	/**
-	 * Returns the ArrayList of ChessPieces
+	 * Returns the ArrayList of ChessPieces.
 	 * 
 	 * @return the ArrayList of ChessPieces
 	 */
@@ -50,7 +50,7 @@ public class ChessPlayer {
 	}
 
 	/**
-	 * Sets the pieces ArrayList to a new ArrayList
+	 * Sets the pieces ArrayList to a new ArrayList.
 	 * 
 	 * @param newPieces the new ArrayList of pieces
 	 */
@@ -59,7 +59,7 @@ public class ChessPlayer {
 	}
 
 	/**
-	 * Removes a piece from the player's ArrayList of ChessPieces
+	 * Removes a piece from the player's ArrayList of ChessPieces.
 	 * 
 	 * @param piece the piece to be removed
 	 */
@@ -68,7 +68,7 @@ public class ChessPlayer {
 	}
 
 	/**
-	 * Adds a piece from the player's ArrayList of ChessPieces
+	 * Adds a piece from the player's ArrayList of ChessPieces.
 	 * 
 	 * @param piece the piece to be added
 	 */
@@ -77,7 +77,7 @@ public class ChessPlayer {
 	}
 
 	/**
-	 * Returns the player's king
+	 * Returns the player's king.
 	 * 
 	 * @return the player's king
 	 */
@@ -87,7 +87,7 @@ public class ChessPlayer {
 
 	/**
 	 * Tests if moving a piece to a target space puts the king in check. The method returns the ChessBoard to its original state at the end
-	 * of the method. The method assumes that the move is valid, has a clear path and is of a different color
+	 * of the method. The method assumes that the move is valid, has a clear path and is of a different color.
 	 * 
 	 * @param piece the piece to be moved
 	 * @param targetSpace the space the piece wants to be moved to
@@ -97,7 +97,8 @@ public class ChessPlayer {
 		if (piece instanceof Exile) {
 			ChessBoard testBoard = (ChessBoard) board.copy();
 			ChessSpace testSpace = testBoard.getPointValue(piece.getSpace().getRow(), piece.getSpace().getCol());
-			return moveLeavesKingInCheck(testBoard, testSpace.getPiece(), testBoard.getPointValue(targetSpace.getRow(), targetSpace.getCol()));
+			return moveLeavesKingInCheck(testBoard, testSpace.getPiece(),
+					testBoard.getPointValue(targetSpace.getRow(), targetSpace.getCol()));
 		}
 		ChessPiece targetPiece = targetSpace.getPiece(); // This is the piece at the targetSpace (can be null)}
 		ChessSpace originalSpace = piece.getSpace();
@@ -143,9 +144,9 @@ public class ChessPlayer {
 	}
 
 	/**
-	 * A more inefficient but conceptually simpler and more bug-free way of checking if moving to a space leaves the king in check
-	 * The method makes a copy of the ChessBoard. We only use this method when it is easier to code and debug
-	 * Otherwise, the checking takes too long
+	 * A more inefficient but conceptually simpler and more bug-free way of checking if moving to a space leaves the king in check The
+	 * method makes a copy of the ChessBoard. We only use this method when it is easier to code and debug. Otherwise, the checking takes too
+	 * long.
 	 * 
 	 * @param testBoard the copy of the ChessBoard used to test on
 	 * @param piece the piece to move
@@ -166,7 +167,7 @@ public class ChessPlayer {
 	}
 
 	/**
-	 * Returns a list of all valid moves a player can make according to the rules of chess This accounts for putting the King in check
+	 * Returns a list of all valid moves a player can make according to the rules of chess. This accounts for putting the King in check.
 	 * 
 	 * @return an ArrayList of all the moves the player can make
 	 */

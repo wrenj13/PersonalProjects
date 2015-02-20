@@ -125,8 +125,8 @@ public class ChessBoard implements Board<ChessSpace> {
 	}
 
 	/**
-	 * Arranges pieces on the board according to a standard 8x8 Chess board.
-	 * It places the white pieces on the bottom and black pieces on the top.
+	 * Arranges pieces on the board according to a standard 8x8 Chess board. It places the white pieces on the bottom and black pieces on
+	 * the top.
 	 */
 	public void setChessBoard() {
 		getPointValue(0, 0).setPiece(new Rook(Color.BLACK, getPointValue(0, 0)));
@@ -152,9 +152,9 @@ public class ChessBoard implements Board<ChessSpace> {
 			getPointValue(1, i).setPiece(new Pawn(Color.BLACK, getPointValue(1, i), 0));
 		}
 	}
-	
+
 	/**
-	 * Adds new pieces to the Chess board, including Boo and Riven pieces
+	 * Adds new pieces to the Chess board, including Boo and Exile pieces.
 	 */
 	public void addNewPieces() {
 		getPointValue(1, 1).setPiece(new Boo(Color.BLACK, getPointValue(1, 1)));
@@ -163,7 +163,7 @@ public class ChessBoard implements Board<ChessSpace> {
 		getPointValue(6, 6).setPiece(new Boo(Color.WHITE, getPointValue(6, 6)));
 
 	}
-	
+
 	/**
 	 * Checks whether or not a ChessPiece can proceed to a given space without being blocked by another ChessPiece. The method assumes that
 	 * the targetSpace is a valid target by the piece; i.e. the piece could move to that space if there were no obstacles.
@@ -175,7 +175,7 @@ public class ChessBoard implements Board<ChessSpace> {
 	public boolean hasClearPath(ChessPiece piece, ChessSpace targetSpace) {
 		if (piece instanceof Knight) { // Knights do not get blocked by other pieces
 			return true;
-		} 
+		}
 		int currentRow = piece.getSpace().getRow();
 		int currentCol = piece.getSpace().getCol();
 		int targetRow = targetSpace.getRow();
@@ -184,7 +184,7 @@ public class ChessBoard implements Board<ChessSpace> {
 		int colDifference = Math.abs(targetCol - currentCol);
 		if (piece instanceof Exile && (rowDifference > 1 || colDifference > 1)) { // fired a shockwave
 			return true;
-		}	// All other pieces move in a straight line to their target.
+		} // All other pieces move in a straight line to their target.
 		// First test if the path is in the same vertical or horizontal line as the piece.
 		if (targetSpace.getRow() == piece.getSpace().getRow() || targetSpace.getCol() == piece.getSpace().getCol()) {
 			return hasClearPathVertHorizontal(currentRow, currentCol, targetRow, targetCol);
@@ -195,7 +195,7 @@ public class ChessBoard implements Board<ChessSpace> {
 
 	/**
 	 * A helper method that determines if a piece moving in a vertical or horizontal line from the current space can proceed to the target
-	 * space without running into another piece
+	 * space without running into another piece.
 	 * 
 	 * @param currentRow the row index of the current space
 	 * @param currentCol the column index of the current space
@@ -238,13 +238,13 @@ public class ChessBoard implements Board<ChessSpace> {
 
 	/**
 	 * A helper method that determines if a piece moving in a diagonal line from the current space can proceed to the target space without
-	 * running into another piece. It does not check whether or not the space has a piece on it currently
+	 * running into another piece. It does not check whether or not the space has a piece on it currently.
 	 * 
 	 * @param currentRow the row index of the current space
 	 * @param currentCol the column index of the current space
 	 * @param targetRow the row index of the target space
 	 * @param targetCol the column index of the target space
-	 * @return True if the piece can proceed without obstacle, false otherwise.
+	 * @return true if the piece can proceed without obstacle, false otherwise.
 	 */
 	public boolean hasClearPathDiagonal(int currentRow, int currentCol, int targetRow, int targetCol) {
 		if (targetRow > currentRow) {
@@ -280,10 +280,10 @@ public class ChessBoard implements Board<ChessSpace> {
 	}
 
 	/**
-	 * Returns an ArrayList of all pieces on the board that are a given color
+	 * Returns an ArrayList of all pieces on the board that are a given color.
 	 * 
 	 * @param color The color of pieces to include
-	 * @return An ArrayList of pieces of the given color
+	 * @return an ArrayList of pieces of the given color
 	 */
 	public ArrayList<ChessPiece> getPieces(Color color) {
 		ArrayList<ChessPiece> pieces = new ArrayList<ChessPiece>();
@@ -302,8 +302,8 @@ public class ChessBoard implements Board<ChessSpace> {
 	/**
 	 * Returns an ArrayList of all pieces on the board that are not the given color.
 	 * 
-	 * @param color The color of pieces not to include
-	 * @return An ArrayList of pieces not of the given color
+	 * @param color the color of pieces not to include
+	 * @return an ArrayList of pieces not of the given color
 	 */
 	public ArrayList<ChessPiece> getOpponentPieces(Color color) {
 		// We iterate through the board array and check each piece.
@@ -364,7 +364,7 @@ public class ChessBoard implements Board<ChessSpace> {
 	}
 
 	/**
-	 * Find the set of all possible spaces an array of pieces can move to
+	 * Find the set of all possible spaces an array of pieces can move to.
 	 * 
 	 * @param pieces the pieces that are moving
 	 * @return the ArrayList of possible spaces
@@ -384,7 +384,7 @@ public class ChessBoard implements Board<ChessSpace> {
 	}
 
 	/**
-	 * Finds all the possible spaces that can be captured by an ArrayList of pieces
+	 * Finds all the possible spaces that can be captured by an ArrayList of pieces.
 	 * 
 	 * @param pieces the pieces that are capturing
 	 * @return the ArrayList of possible spaces
@@ -394,7 +394,8 @@ public class ChessBoard implements Board<ChessSpace> {
 	}
 
 	/**
-	 * Finds all the possible spaces that can be captured by an ArrayList of pieces, allowing the pieces to capture pieces of the same color
+	 * Finds all the possible spaces that can be captured by an ArrayList of pieces, allowing the pieces to capture pieces of the same
+	 * color.
 	 * 
 	 * @param pieces the pieces that are capturing
 	 * @return the ArrayList of possible spaces
@@ -402,10 +403,10 @@ public class ChessBoard implements Board<ChessSpace> {
 	public ArrayList<CaptureSpace> findCaptureMovesIgnoreColor(ArrayList<ChessPiece> pieces) {
 		return findPossibleMoves(pieces, true, true);
 	}
-	
+
 	/**
-	 * Finds all possible spaces a single ChessPiece can move to on a given ChessBoard
-	 * This method accounts move validity, clear path, and enemy piece color (if applicable)
+	 * Finds all possible spaces a single ChessPiece can move to on a given ChessBoard. This method accounts move validity, clear path, and
+	 * enemy piece color (if applicable).
 	 * 
 	 * @param piece the piece that is moving
 	 * @param captureOnly true to only include the spaces where the piece can capture an enemy piece, false otherwise
@@ -421,10 +422,10 @@ public class ChessBoard implements Board<ChessSpace> {
 		}
 		return possibleMoves;
 	}
-	
+
 	/**
-	 * Iterates through an ArrayList<CaptureSpace> to find the corresponding CaptureSpace to a given ChessSpace That is, the returned
-	 * CaptureSpace has the same row and column as the ChessSpace If no space exists, return null
+	 * Iterates through an ArrayList<CaptureSpace> to find the corresponding CaptureSpace to a given ChessSpace. That is, the returned
+	 * CaptureSpace has the same row and column as the ChessSpace. If no space exists, return null.
 	 * 
 	 * @param spaces the ArrayList to iterate through
 	 * @param certainSpace the ChessSpace to find

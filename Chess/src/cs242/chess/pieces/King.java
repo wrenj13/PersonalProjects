@@ -17,8 +17,8 @@ import cs242.chess.ChessSpace;
 public class King extends ChessPiece {
 
 	/**
-	 * Creates a King object. It assigns the ImageIcon based on the color of the King It also assigns the space of the King Note that King
-	 * gets the value of "99", which is far higher than any piece
+	 * Creates a King object. It assigns the ImageIcon based on the color of the King. It also assigns the space of the King. Note that King
+	 * gets the value of "99", which is far higher than any piece.
 	 * 
 	 * @param color the color of the King
 	 * @param space the space the piece is on
@@ -36,7 +36,7 @@ public class King extends ChessPiece {
 	}
 
 	/**
-	 * Checks if the King can move to the desired space Note that "moving" to the piece's current space is not a valid move
+	 * Checks if the King can move to the desired space Note that "moving" to the piece's current space is not a valid move.
 	 * 
 	 * @return true if the target space is 1 space away from the current space. False otherwise
 	 */
@@ -55,10 +55,10 @@ public class King extends ChessPiece {
 		}
 		return true;
 	}
-	
+
 	/**
-	 * Returns a deep copy of the King
-	 * Note that we don't set the King's space because there is no point in doing so without relation to a Board
+	 * Returns a deep copy of the King. Note that we don't set the King's space because there is no point in doing so without relation to a
+	 * Board.
 	 * 
 	 * @return A deep copy of the King
 	 */

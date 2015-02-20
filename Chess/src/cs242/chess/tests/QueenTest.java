@@ -13,7 +13,7 @@ import cs242.chess.ChessSpace;
 import cs242.chess.pieces.Queen;
 
 /**
- * A class to test the functionality of the Queen class
+ * A class to test the functionality of the Queen class.
  * 
  * @author REN-JAY_2
  * 
@@ -25,7 +25,7 @@ public class QueenTest {
 	private static final double DELTA = .01;
 
 	/**
-	 * Creates a default ChessBoard
+	 * Creates a default ChessBoard.
 	 * 
 	 * @throws Exception
 	 */
@@ -35,7 +35,7 @@ public class QueenTest {
 	}
 
 	/**
-	 * Resets the ChessBoard and sets the queen back to null
+	 * Resets the ChessBoard and sets the queen back to null.
 	 * 
 	 * @throws Exception
 	 */
@@ -46,7 +46,7 @@ public class QueenTest {
 	}
 
 	/**
-	 * Tests to make sure all the fields are properly instantiated, including row, column, ChessSpace and value
+	 * Tests to make sure all the fields are properly instantiated, including row, column, ChessSpace and value.
 	 */
 	@Test
 	public void testInstantiate() {
@@ -59,7 +59,7 @@ public class QueenTest {
 	}
 
 	/**
-	 * Tests to make sure that an out of bounds exception is thrown when instantiating with an out of bounds point
+	 * Tests to make sure that an out of bounds exception is thrown when instantiating with an out of bounds point.
 	 */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void testBadInstantiate() {
@@ -68,7 +68,7 @@ public class QueenTest {
 	}
 
 	/**
-	 * Tests to make sure the method returns true on valid moves and false on invalid moves
+	 * Tests to make sure the method returns true on valid moves and false on invalid moves.
 	 */
 	@Test
 	public void testValidMove() {
@@ -83,7 +83,7 @@ public class QueenTest {
 	}
 
 	/**
-	 * Tests to make sure the valid moves still return true even if the moves go "off" the board
+	 * Tests to make sure the valid moves still return true even if the moves go "off" the board.
 	 */
 	@Test
 	public void testValidMoveOffBoard() {
@@ -94,7 +94,7 @@ public class QueenTest {
 	}
 
 	/**
-	 * Make sure the method updates the ChessSpace and ChessPiece when the piece is moved
+	 * Make sure the method updates the ChessSpace and ChessPiece when the piece is moved.
 	 */
 	@Test
 	public void testMoveTo() {
@@ -107,7 +107,7 @@ public class QueenTest {
 	}
 
 	/**
-	 * Make sure the method updates the ChessSpace and both ChessPieces when a piece captures another piece
+	 * Make sure the method updates the ChessSpace and both ChessPieces when a piece captures another piece.
 	 */
 	@Test
 	public void testCapture() {

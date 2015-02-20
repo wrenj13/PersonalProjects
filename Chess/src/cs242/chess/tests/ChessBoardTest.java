@@ -21,7 +21,7 @@ import cs242.chess.pieces.Queen;
 import cs242.chess.pieces.Rook;
 
 /**
- * A class to test the functionality of the ChessBoard class
+ * A class to test the functionality of the ChessBoard class.
  * 
  * @author REN-JAY_2
  * 
@@ -31,7 +31,7 @@ public class ChessBoardTest {
 	private static ChessBoard board;
 
 	/**
-	 * Initializes the ChessBoard before every test
+	 * Initializes the ChessBoard before every test.
 	 * 
 	 * @throws Exception
 	 * 
@@ -42,7 +42,7 @@ public class ChessBoardTest {
 	}
 
 	/**
-	 * Clears the ChessBoard
+	 * Clears the ChessBoard.
 	 * 
 	 * @throws Exception
 	 */
@@ -52,7 +52,7 @@ public class ChessBoardTest {
 	}
 
 	/**
-	 * Tests to make sure all fields are properly initialized, including row, column and default ChessSpace values
+	 * Tests to make sure all fields are properly initialized, including row, column and default ChessSpace values.
 	 */
 	@Test
 	public void testInitialize() {
@@ -83,7 +83,7 @@ public class ChessBoardTest {
 	}
 
 	/**
-	 * Checks if the ChessBoard produced by clear() has the appropriate row and column indices, and a null ChessPiece object
+	 * Checks if the ChessBoard produced by clear() has the appropriate row and column indices, and a null ChessPiece object.
 	 */
 	@Test
 	public void testClear() {
@@ -96,8 +96,8 @@ public class ChessBoardTest {
 	}
 
 	/**
-	 * Tests if the function returns true if there is a clear path and false otherwise Note that the function assumes that there is a valid
-	 * path if there were no other pieces
+	 * Tests if the function returns true if there is a clear path and false otherwise. Note that the function assumes that there is a valid
+	 * path if there were no other pieces.
 	 */
 	@Test
 	public void testClearPath() {
@@ -129,9 +129,9 @@ public class ChessBoardTest {
 		Knight whiteKnight = (Knight) board.getPointValue(7, 1).getPiece(); // test for knight
 		assertTrue(board.hasClearPath(whiteKnight, board.getPointValue(5, 0)));
 	}
-	
+
 	/**
-	 * Tests if the ArrayList the function returns contains the opponent pieces and no other pieces
+	 * Tests if the ArrayList the function returns contains the opponent pieces and no other pieces.
 	 */
 	@Test
 	public void testGetPieces() {
@@ -144,7 +144,7 @@ public class ChessBoardTest {
 	}
 
 	/**
-	 * Tests if the ArrayList the function returns contains the opponent pieces and no other pieces
+	 * Tests if the ArrayList the function returns contains the opponent pieces and no other pieces.
 	 */
 	@Test
 	public void testGetOpponentPieces() {
@@ -157,8 +157,8 @@ public class ChessBoardTest {
 	}
 
 	/**
-	 * Tests if the ArrayList the function returns contains the piece's allowable moves and no others The method tests for both all moves
-	 * and capture moves only
+	 * Tests if the ArrayList the function returns contains the piece's allowable moves and no others. The method tests for both all moves
+	 * and capture moves only.
 	 */
 	@Test
 	public void testFindPossibleMovesSingle() {
@@ -193,8 +193,8 @@ public class ChessBoardTest {
 	}
 
 	/**
-	 * Tests if the ArrayList the function returns contains all possible moves that the ArrayList of pieces can do Also tests the data
-	 * inside the CaptureSpaces that are contained in the ArrayList
+	 * Tests if the ArrayList the function returns contains all possible moves that the ArrayList of pieces can do. Also tests the data
+	 * inside the CaptureSpaces that are contained in the ArrayList.
 	 */
 	@Test
 	public void testFindPossibleMovesArray() {
@@ -236,8 +236,8 @@ public class ChessBoardTest {
 	}
 
 	/**
-	 * Tests if the ArrayList the function returns contains all possible moves that the ArrayList of pieces can do This should ignore the
-	 * color of any other piece
+	 * Tests if the ArrayList the function returns contains all possible moves that the ArrayList of pieces can do. This should ignore the
+	 * color of any other piece.
 	 */
 	@Test
 	public void testFindPossibleMovesIgnoreColor() {
@@ -281,8 +281,8 @@ public class ChessBoardTest {
 	}
 
 	/**
-	 * Tests if the ArrayList the function returns contains all possible moves where the ArrayList of pieces can capture Make sure non
-	 * capture moves are not included
+	 * Tests if the ArrayList the function returns contains all possible moves where the ArrayList of pieces can capture. Make sure non
+	 * capture moves are not included.
 	 */
 	@Test
 	public void testFindCaptureMoves() {

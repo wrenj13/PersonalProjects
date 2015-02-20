@@ -16,7 +16,7 @@ public class CaptureSpace extends ChessSpace {
 	private ArrayList<ChessPiece> pieces = new ArrayList<ChessPiece>(); // pieces that can capture the space
 
 	/**
-	 * A constructor that constructs the piece based off a ChessSpace's row and column
+	 * A constructor that constructs the piece based off a ChessSpace's row and column.
 	 * 
 	 * @param newSpace the piece to base the CaptureSpace off of
 	 */
@@ -34,7 +34,7 @@ public class CaptureSpace extends ChessSpace {
 	}
 
 	/**
-	 * Returns the ArrayList of pieces that can capture the given piece
+	 * Returns the ArrayList of pieces that can capture the given piece.
 	 * 
 	 * @return the ArrayList of pieces
 	 */

@@ -17,8 +17,8 @@ import cs242.chess.ChessSpace;
 public class Knight extends ChessPiece {
 
 	/**
-	 * Creates a Knight object. It assigns the ImageIcon based on the color of the Knight It also assigns the space of the Knight Note that
-	 * Knight gets the value of "3"
+	 * Creates a Knight object. It assigns the ImageIcon based on the color of the Knight. It also assigns the space of the Knight. Note that
+	 * Knight gets the value of "3".
 	 * 
 	 * @param color the color of the Knight
 	 * @param space the space the piece is on
@@ -36,7 +36,7 @@ public class Knight extends ChessPiece {
 	}
 
 	/**
-	 * Checks if the Knight can move to the desired space
+	 * Checks if the Knight can move to the desired space.
 	 * 
 	 * @return true if the target space is an L away from the current space. False otherwise
 	 */
@@ -54,10 +54,10 @@ public class Knight extends ChessPiece {
 		}
 		return true;
 	}
-	
+
 	/**
-	 * Returns a deep copy of the Knight
-	 * Note that we don't set the Knight's space because there is no point in doing so without relation to a Board
+	 * Returns a deep copy of the Knight. Note that we don't set the Knight's space because there is no point in doing so without relation
+	 * to a Board.
 	 * 
 	 * @return A deep copy of the Knight
 	 */

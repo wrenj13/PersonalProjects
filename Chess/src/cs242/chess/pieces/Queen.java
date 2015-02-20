@@ -17,8 +17,8 @@ import cs242.chess.ChessSpace;
 public class Queen extends ChessPiece {
 
 	/**
-	 * Creates a Queen object. It assigns the ImageIcon based on the color of the Queen It also assigns the space of the Queen Note that
-	 * Queen gets the value of "9"
+	 * Creates a Queen object. It assigns the ImageIcon based on the color of the Queen. It also assigns the space of the Queen Note that
+	 * Queen gets the value of "9".
 	 * 
 	 * @param color the color of the Queen
 	 * @param space the space the piece is on
@@ -36,7 +36,7 @@ public class Queen extends ChessPiece {
 	}
 
 	/**
-	 * Checks if the Queen can move to the desired space Note that "moving" to the piece's current space is not a valid move
+	 * Checks if the Queen can move to the desired space. Note that "moving" to the piece's current space is not a valid move.
 	 * 
 	 * @return true if the target space is in a horizontal, vertical or diagonal line away from the current space. False otherwise
 	 */
@@ -56,10 +56,10 @@ public class Queen extends ChessPiece {
 		}
 		return true;
 	}
-	
+
 	/**
-	 * Returns a deep copy of the Queen
-	 * Note that we don't set the Queen's space because there is no point in doing so without relation to a Board
+	 * Returns a deep copy of the Queen. Note that we don't set the Queen's space because there is no point in doing so without relation to
+	 * a Board.
 	 * 
 	 * @return A deep copy of the Queen
 	 */

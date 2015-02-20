@@ -22,7 +22,7 @@ import cs242.chess.pieces.Queen;
 import cs242.chess.pieces.Rook;
 
 /**
- * A class to test the ChessPlayer class
+ * A class to test the ChessPlayer class.
  * 
  * @author REN-JAY_2
  * 
@@ -33,7 +33,7 @@ public class ChessPlayerTest {
 	private static ChessBoard board;
 
 	/**
-	 * Creates a default ChessBoard
+	 * Creates a default ChessBoard.
 	 * 
 	 * @throws Exception
 	 */
@@ -43,7 +43,7 @@ public class ChessPlayerTest {
 	}
 
 	/**
-	 * Initializes the ChessBoard and the Player array before every test
+	 * Initializes the ChessBoard and the Player array before every test.
 	 * 
 	 * @throws Exception
 	 * 
@@ -55,7 +55,7 @@ public class ChessPlayerTest {
 	}
 
 	/**
-	 * Clears the ChessBoard
+	 * Clears the ChessBoard.
 	 * 
 	 * @throws Exception
 	 */
@@ -84,8 +84,8 @@ public class ChessPlayerTest {
 	}
 
 	/**
-	 * Tests if the possible moves array only contains move that bring the king out of check when it is in check This method implicitly
-	 * tests moveLeavesKingInCheck
+	 * Tests if the possible moves array only contains move that bring the king out of check when it is in check. This method implicitly
+	 * tests moveLeavesKingInCheck.
 	 */
 	@Test
 	public void testGetMovesInCheck() {
@@ -111,7 +111,7 @@ public class ChessPlayerTest {
 	}
 
 	/**
-	 * Tests if the possible moves array is empty on checkmate
+	 * Tests if the possible moves array is empty on checkmate.
 	 */
 	@Test
 	public void testCheckMate() {
@@ -125,7 +125,7 @@ public class ChessPlayerTest {
 	}
 
 	/**
-	 * Tests if the possible moves array is empty on checkmate
+	 * Tests if the possible moves array is empty on checkmate.
 	 */
 	@Test
 	public void testBoardUnchanged() {

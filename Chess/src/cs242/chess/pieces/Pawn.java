@@ -21,8 +21,8 @@ public class Pawn extends ChessPiece {
 	private int direction;
 
 	/**
-	 * Creates a Pawn object. It assigns the ImageIcon based on the color of the Pawn It also assigns the space of the Pawn Note that Pawn
-	 * gets the value of "1"
+	 * Creates a Pawn object. It assigns the ImageIcon based on the color of the Pawn. It also assigns the space of the Pawn Note that Pawn
+	 * gets the value of "1".
 	 * 
 	 * @param color the color of the Pawn
 	 * @param space the space the piece is on
@@ -51,7 +51,7 @@ public class Pawn extends ChessPiece {
 	}
 
 	/**
-	 * Sets the direction of the pawn
+	 * Sets the direction of the pawn.
 	 * 
 	 * @param newDir the new direction
 	 */
@@ -60,7 +60,7 @@ public class Pawn extends ChessPiece {
 	}
 
 	/**
-	 * Checks if the Pawn can move to the desired space
+	 * Checks if the Pawn can move to the desired space.
 	 * 
 	 * @return true if the target space is 1 space in front of the current space, or for two-space advance. False otherwise
 	 */
@@ -137,10 +137,10 @@ public class Pawn extends ChessPiece {
 			}
 		}
 	}
-	
+
 	/**
-	 * Returns a deep copy of the Pawn
-	 * Note that we don't set the Pawn's space because there is no point in doing so without relation to a Board
+	 * Returns a deep copy of the Pawn. Note that we don't set the Pawn's space because there is no point in doing so without relation to a
+	 * Board.
 	 * 
 	 * @return A deep copy of the Pawn
 	 */

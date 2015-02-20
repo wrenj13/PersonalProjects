@@ -1,8 +1,6 @@
 package cs242.chess;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -11,23 +9,27 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
-import cs242.chess.pieces.Bishop;
 import cs242.chess.pieces.ChessPiece;
-import cs242.chess.pieces.King;
-import cs242.chess.pieces.Knight;
 import cs242.chess.pieces.Pawn;
-import cs242.chess.pieces.Queen;
-import cs242.chess.pieces.Rook;
 import cs242.chess.pieces.Exile;
 
-
+/**
+ * A class to display the ChessBoard and ChessPieces of a chess game. It also includes the mouse interface.
+ * 
+ * @author REN-JAY_2
+ * 
+ */
 public class ChessDisplay {
 
 	private static ChessPiece currentPiece;
 	private static int currentPlayerIndex = 1;
 
+	/**
+	 * Prompts the user if he or she wants a computer player, and then runs the game.
+	 * 
+	 * @param args string arguments
+	 */
 	public static void main(String[] args) {
 		final JFrame frame = new JFrame("Chess");
 
@@ -38,7 +40,6 @@ public class ChessDisplay {
 		board.addNewPieces();
 
 		final ChessComponent boardComponent = new ChessComponent(board);
-
 		class ChessMouseListener extends MouseAdapter {
 			public void mousePressed(MouseEvent e) {
 				int y = e.getY() - 30;
@@ -76,12 +77,13 @@ public class ChessDisplay {
 				// remove the eliminated piece if piece was taken
 				if (currentPiece instanceof Exile) {
 					// recalculate pieces array
-					for (int i = currentPlayerIndex + 1; i != currentPlayerIndex; i++) {
-						if (i >= boardComponent.getPlayerList().size()) {
-							i %= boardComponent.getPlayerList().size();
-						}
-						ChessPlayer otherPlayer = boardComponent.getPlayer(i);
+					for (int index = (currentPlayerIndex + 1) % boardComponent.getPlayerList().size(); index != currentPlayerIndex;) {
+						ChessPlayer otherPlayer = boardComponent.getPlayer(index);
 						otherPlayer.setPieces(board.getPieces(otherPlayer.getKing().getColor()));
+						index++;
+						if (index >= boardComponent.getPlayerList().size()) {
+							index %= boardComponent.getPlayerList().size();
+						}
 					}
 				} else { // if not Exile, do this for efficiency
 					if (targetPiece != null) {
@@ -91,11 +93,11 @@ public class ChessDisplay {
 							}
 						}
 					}
-				}
-				if (currentPiece instanceof Pawn) {
-					if (targetSpace.getRow() == 0 || targetSpace.getRow() == 7) {
-						currentPlayer.getPieces().remove(currentPiece);
-						currentPlayer.addPiece(targetSpace.getPiece());
+					if (currentPiece instanceof Pawn) {
+						if (targetSpace.getRow() == 0 || targetSpace.getRow() == 7) {
+							currentPlayer.getPieces().remove(currentPiece);
+							currentPlayer.addPiece(targetSpace.getPiece());
+						}
 					}
 				}
 				currentPlayerIndex += 1;
@@ -123,7 +125,6 @@ public class ChessDisplay {
 					{
 						currentPlayerIndex %= boardComponent.getPlayerList().size();
 					}
-					boardComponent.update();
 				}
 				boardComponent.repaint();
 			}
@@ -145,25 +146,21 @@ public class ChessDisplay {
 		frame.setSize((board.getWidth() + 1) * boardComponent.getPointSize(), (board.getLength() + 1) * boardComponent.getPointSize());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
-		
 
 		Object[] possibleValues = { "Human vs Human", "Human vs Computer", "Computer vs Computer" };
-		int gameValue = JOptionPane.showOptionDialog(null, "Choose an option", "Input", JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
-				possibleValues, possibleValues[0]);
+		int gameValue = JOptionPane.showOptionDialog(null, "Choose an option", "Input", JOptionPane.DEFAULT_OPTION,
+				JOptionPane.INFORMATION_MESSAGE, null, possibleValues, possibleValues[0]);
 
 		ChessPlayer whitePlayer;
 		ChessPlayer blackPlayer;
 
-
 		if (gameValue == 0) {
 			whitePlayer = new ChessPlayer(Color.WHITE, board);
 			blackPlayer = new ChessPlayer(Color.BLACK, board);
-		}
-		else if (gameValue == 1) {
+		} else if (gameValue == 1) {
 			whitePlayer = new ChessPlayer(Color.WHITE, board);
 			blackPlayer = new ComputerPlayer(Color.BLACK, board);
-		}
-		else {
+		} else {
 			whitePlayer = new ComputerPlayer(Color.WHITE, board);
 			blackPlayer = new ComputerPlayer(Color.BLACK, board);
 		}

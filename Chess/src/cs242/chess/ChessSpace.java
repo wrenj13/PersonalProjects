@@ -16,7 +16,7 @@ public class ChessSpace {
 	private int col;
 
 	/**
-	 * Constructs the space based on row and column indices
+	 * Constructs the space based on row and column indices.
 	 * 
 	 * @param r the row index of the space
 	 * @param c the column index of the space
@@ -27,7 +27,7 @@ public class ChessSpace {
 	}
 
 	/**
-	 * Returns the row index
+	 * Returns the row index.
 	 * 
 	 * @return the row index
 	 */
@@ -36,7 +36,7 @@ public class ChessSpace {
 	}
 
 	/**
-	 * Returns the column index
+	 * Returns the column index.
 	 * 
 	 * @return the column index
 	 */
@@ -45,7 +45,7 @@ public class ChessSpace {
 	}
 
 	/**
-	 * Returns the piece currently on the space
+	 * Returns the piece currently on the space.
 	 * 
 	 * @return the piece
 	 */
@@ -54,7 +54,7 @@ public class ChessSpace {
 	}
 
 	/**
-	 * Sets the piece currently on the space
+	 * Sets the piece currently on the space.
 	 * 
 	 * @param newPiece the piece to be put on the space
 	 */
@@ -63,7 +63,7 @@ public class ChessSpace {
 	}
 
 	/**
-	 * Returns a string representation of the ChessSpace
+	 * Returns a string representation of the ChessSpace.
 	 * 
 	 * @return a string representation
 	 */

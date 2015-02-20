@@ -28,14 +28,14 @@ public interface Board<E> {
 	public void setPointValue(int row, int col, E value);
 
 	/**
-	 * Returns the number of rows, or length, in the array
+	 * Returns the number of rows, or length, in the array.
 	 * 
 	 * @return the number of rows of the array
 	 */
 	public int getLength();
 
 	/**
-	 * Returns the number of columns, or width, of the array
+	 * Returns the number of columns, or width, of the array.
 	 * 
 	 * @return the number of columns of the array
 	 */

@@ -16,8 +16,8 @@ import cs242.chess.ChessSpace;
 public class Rook extends ChessPiece {
 
 	/**
-	 * Creates a Rook object. It assigns the ImageIcon based on the color of the Rook It also assigns the space of the Rook Note that Rook
-	 * gets the value of "5"
+	 * Creates a Rook object. It assigns the ImageIcon based on the color of the Rook. It also assigns the space of the Rook Note that Rook
+	 * gets the value of "5".
 	 * 
 	 * @param color the color of the Rook
 	 * @param space the space the piece is on
@@ -35,7 +35,7 @@ public class Rook extends ChessPiece {
 	}
 
 	/**
-	 * Checks if the Rook can move to the desired space Note that "moving" to the piece's current space is not a valid move
+	 * Checks if the Rook can move to the desired space. Note that "moving" to the piece's current space is not a valid move.
 	 * 
 	 * @return true if the target space is in a horizontal or vertical line away from the current space. False otherwise
 	 */
@@ -48,10 +48,10 @@ public class Rook extends ChessPiece {
 		}
 		return true;
 	}
-	
+
 	/**
-	 * Returns a deep copy of the Rook
-	 * Note that we don't set the Rook's space because there is no point in doing so without relation to a Board
+	 * Returns a deep copy of the Rook. Note that we don't set the Rook's space because there is no point in doing so without relation to a
+	 * Board.
 	 * 
 	 * @return A deep copy of the Rook
 	 */
