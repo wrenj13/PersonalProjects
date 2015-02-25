@@ -334,10 +334,10 @@ public class ChessBoard implements Board<ChessSpace> {
 	public ArrayList<CaptureSpace> findPossibleMoves(ArrayList<ChessPiece> pieces, boolean ignoreColor, boolean captureMove) {
 		ArrayList<CaptureSpace> spaces = new ArrayList<CaptureSpace>();
 		boolean addCondition;
-		for (int i = 0; i < getLength(); i++) {
+		for (int i = 0; i < getLength(); i++) { // we iterate through every space on the board
 			for (int j = 0; j < getWidth(); j++) {
 				CaptureSpace captureSpace = new CaptureSpace(getPointValue(i, j));
-				for (int k = 0; k < pieces.size(); k++) {
+				for (int k = 0; k < pieces.size(); k++) { // we test every space
 					ChessPiece currentPiece = pieces.get(k);
 					ChessPiece targetPiece = getPointValue(i, j).getPiece();
 					if (ignoreColor && !captureMove) {
@@ -347,14 +347,14 @@ public class ChessBoard implements Board<ChessSpace> {
 					} else if (ignoreColor && captureMove) {
 						addCondition = targetPiece != null;
 					} else {
-						addCondition = targetPiece == null || targetPiece.getColor() != currentPiece.getColor(); // default
-																													// condition
+						addCondition = targetPiece == null || targetPiece.getColor() != currentPiece.getColor(); // default condition
 					}
-					// target space is empty or has opponent piece
+					// if the piece satisfies all the conditions, we add it to the list that can capture the space
 					if (currentPiece.validMove(getPointValue(i, j)) && hasClearPath(currentPiece, getPointValue(i, j)) && addCondition) {
 						captureSpace.addPiece(currentPiece);
 					}
 				}
+				// if the space has any pieces that can capture it, we add it to the ArrayList
 				if (!captureSpace.getPieces().isEmpty()) {
 					spaces.add(captureSpace);
 				}

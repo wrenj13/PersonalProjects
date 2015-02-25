@@ -15,6 +15,8 @@ import cs242.chess.ChessSpace;
  * 
  */
 public class King extends ChessPiece {
+	
+	private boolean inCheck;
 
 	/**
 	 * Creates a King object. It assigns the ImageIcon based on the color of the King. It also assigns the space of the King. Note that King
@@ -33,8 +35,26 @@ public class King extends ChessPiece {
 		}
 		setImageIcon(new ImageIcon(kingImage));
 		setValue(99);
+		inCheck = false;
 	}
 
+	/**
+	 * Returns whether or not the king is in check
+	 * 
+	 * @return true if the king is in check, false otherwise
+	 */
+	public boolean getCheck() {
+		return inCheck;
+	}
+	/**
+	 * Sets whether or not the king is in check
+	 * 
+	 * @param whether or not the king is in check
+	 */
+	public void setCheck(boolean check) {
+		inCheck = check;
+	}
+	
 	/**
 	 * Checks if the King can move to the desired space Note that "moving" to the piece's current space is not a valid move.
 	 * 

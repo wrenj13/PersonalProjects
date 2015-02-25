@@ -16,8 +16,8 @@ public class ComputerPlayer extends ChessPlayer {
 	private ArrayList<CaptureSpace> dangerSpaces = new ArrayList<CaptureSpace>();
 	private ChessPiece king;
 
-	public ComputerPlayer(Color color, ChessBoard newBoard) {
-		super(color, newBoard);
+	public ComputerPlayer(Color color, ChessBoard newBoard, String playerName) {
+		super(color, newBoard, playerName);
 		board = newBoard;
 		for (ChessPiece p : getPieces()) // should only be one king
 		{
@@ -27,53 +27,73 @@ public class ComputerPlayer extends ChessPlayer {
 		}
 	}
 
+	/**
+	 * A method that randomly selects a move from the list of possible moves the computer can make and makes that move
+	 * 
+	 * @return true if there is a possible move to make, false otherwise
+	 */
 	public boolean randomMove() {
-		boolean moved = false;
-		int tryCount = 0;
-		while (!moved) {
-			int index = (int) (getPieces().size() * Math.random());
-			ChessPiece p = getPieces().get(index);
-			ArrayList<ChessSpace> possibleSpaces = board.findPossibleMoves(p, false);
-			if (possibleSpaces.size() != 0) {
-				int moveIndex = (int) (possibleSpaces.size() * Math.random());
-				ChessSpace targetSpace = possibleSpaces.get(moveIndex);
-				boolean isSafe = false;
-				if (targetSpace.getPiece() == null || p.getColor() != targetSpace.getPiece().getColor()) // is empty or has opponent piece
-				{
-					if (p instanceof Pawn && (targetSpace.getRow() == 0 || targetSpace.getRow() == 7)) {
-						p.getSpace().setPiece(null);
-						ChessPiece queen = new Queen(p.getColor(), targetSpace);
-						targetSpace.setPiece(queen);
-						addPiece(queen);
-						removePiece(p);
-						return true;
-					} else {
-						if (tryCount > 10) {
-							System.out.println("took 10 tries, but still no");
-							isSafe = true; // there may be no safe spaces
-						} else {
-							ChessSpace pieceSpace = p.getSpace();
-							ChessPiece targetPiece = targetSpace.getPiece();
-							p.getSpace().setPiece(null); // temporary
-							targetSpace.setPiece(p); // if piece is in new place
-							ArrayList<CaptureSpace> temp = dangerSpaces;
-							dangerSpaces = board.findPossibleMovesIgnoreColor(board.getOpponentPieces(king.getColor()));
-							isSafe = !inDanger(targetSpace);
-							dangerSpaces = temp; // returning to normal
-							pieceSpace.setPiece(p);
-							targetSpace.setPiece(targetPiece);
-						}
-						if (isSafe || p instanceof Pawn) // not valuing Pawns as much
-						{
-							p.moveTo(targetSpace);
-							return true;
-						}
+		ArrayList<CaptureSpace> possibleMoves = getPossibleMoves();
+		if (possibleMoves.size() == 0) {
+			return false;
+		}
+		int spaceIndex = (int) (possibleMoves.size() * Math.random());
+		CaptureSpace targetSpace = possibleMoves.get(spaceIndex);
+		int pieceIndex = (int) (targetSpace.getPieces().size() * Math.random());
+		ChessPiece piece = possibleMoves.get(spaceIndex).getPieces().get(pieceIndex);
+		piece.moveTo(board.getPointValue(targetSpace.getRow(), targetSpace.getCol()));
+		return true;
+	}
+	
+	/**
+	 * Considers all possible moves and selects the one with the highest value.
+	 * This value is increased if an opponent piece is captured and decreased if the computer's piece is captured.
+	 * This method does not consider evading capture.
+	 * 
+	 * @return true if a move was made, false otherwise
+	 */
+	public boolean bestRandomMove() {
+		ArrayList<CaptureSpace> possibleMoves = getPossibleMoves();
+		if (possibleMoves.size() == 0) {
+			return false;
+		}
+		dangerSpaces = board.findPossibleMovesIgnoreColor(board.getOpponentPieces(king.getColor()));
+		dangerSpaces = adjustForPawns(dangerSpaces);
+		ArrayList<CaptureSpace> bestMoves = new ArrayList<CaptureSpace>();
+		int currentBestValue = -99; // there is no move that will get less than -99
+		for (int spaceIndex = 0; spaceIndex < possibleMoves.size(); spaceIndex++) {
+			for (int pieceIndex = 0; pieceIndex < possibleMoves.get(spaceIndex).getPieces().size(); pieceIndex++) {
+				int value = 0;
+				// find the Chess Space that corresponds to the CaptureSpace
+				CaptureSpace targetCaptureSpace = possibleMoves.get(spaceIndex);
+				ChessSpace targetSpace = board.getPointValue(targetCaptureSpace.getRow(), targetCaptureSpace.getCol());
+				ChessPiece currentPiece = targetCaptureSpace.getPieces().get(pieceIndex);
+				if (targetSpace.getPiece() != null) {
+					value += targetSpace.getPiece().getValue();
+				}
+				// if a opponent piece can "capture" the same space, subtract the current value of the piece
+				if (board.findCaptureSpace(dangerSpaces, board.getPointValue(targetSpace.getRow(), targetSpace.getCol())) != null) {
+					value -= currentPiece.getValue();
+				}
+				if (value >= currentBestValue) {
+					if (value > currentBestValue) {
+						bestMoves = new ArrayList<CaptureSpace>();
+						currentBestValue = value;
 					}
-					tryCount++;
+					// copy the space and give it a single ChessPiece so that each piece will have its own entry in the ArrayList
+					CaptureSpace copySpace = new CaptureSpace(targetSpace);
+					copySpace.addPiece(currentPiece);
+					bestMoves.add(copySpace);
 				}
 			}
 		}
-		return false;
+		// randomly choose 1
+		int moveIndex = (int) (bestMoves.size() * Math.random());
+		CaptureSpace bestMove = bestMoves.get(moveIndex); 
+		// should have only 1 piece in the index
+		ChessPiece pieceToBeMoved = bestMove.getPieces().get(0);
+		pieceToBeMoved.moveTo(board.getPointValue(bestMove.getRow(), bestMove.getCol()));
+		return true;
 	}
 
 	public boolean captureMove(int tryNum) {
@@ -162,6 +182,13 @@ public class ComputerPlayer extends ChessPlayer {
 		return false;
 	}
 
+	/**
+	 * Does the best possible move to prevent the capture of an enemy piece.
+	 * It considers capturing the enemy piece, moving out of the way, and moving a piece in the way.
+	 * 
+	 * @param p the piece to be saved
+	 * @return true if a move was made, false otherwise
+	 */
 	public boolean evasionMove(ChessPiece p) {
 		// first, see if it is worth capturing the enemy piece
 		ArrayList<ChessPiece> enemyPieces = board.findCaptureSpace(dangerSpaces, p.getSpace()).getPieces();
@@ -338,8 +365,7 @@ public class ComputerPlayer extends ChessPlayer {
 		boolean kingDanger = inDanger(king.getSpace());
 		if (kingDanger) {
 			System.out.println("Opponent king in check");
-			boolean escaped = evasionMove(king);
-			return escaped;
+			return bestRandomMove();
 		}
 		ArrayList<ChessPiece> valuablePieces = getValuablePieces();
 		for (ChessPiece p : valuablePieces) {
@@ -352,11 +378,11 @@ public class ComputerPlayer extends ChessPlayer {
 				System.out.println("failed evasion..." + p);
 			}
 		}
-		if (captureMove(10)) {
-			System.out.println("capture move");
-			return true;
-		}
+//		if (captureMove(10)) {
+	//		System.out.println("capture move");
+		//	return true;
+	//	}
 		System.out.println("random...");
-		return randomMove();
+		return bestRandomMove();
 	}
 }

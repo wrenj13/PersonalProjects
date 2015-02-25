@@ -109,7 +109,6 @@ public class Exile extends ChessPiece {
 	 * @return true if the target space is okay to move to, false otherwise
 	 */
 	public void fireShockwave(int targetRow, int targetCol) {
-		System.out.println("wind slash fired!" + targetRow + targetCol);
 		if (targetRow < 0 || targetRow >= board.getLength() || targetCol < 0 || targetCol >= board.getWidth()) {
 			return;
 		}

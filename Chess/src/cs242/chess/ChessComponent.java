@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 
 import cs242.chess.pieces.ChessPiece;
+import cs242.chess.pieces.King;
 
 /**
  * A class that represents a ChessBoard object with the pieces. It creates the board outline and displays the pieces on it. It also holds an
@@ -27,6 +28,9 @@ public class ChessComponent extends JComponent {
 	private ChessBoard board;
 	private ArrayList<ChessPlayer> playerList;
 	private int pointSize = 100;
+	private ArrayList<ChessSpace> moveSpaces; // highlight these spaces in green
+	private ArrayList<ChessSpace> captureSpaces; // highlight these spaces in red
+	private ChessSpace mouseOverSpace; // highlight this space in blue
 
 	/**
 	 * Creates a ChessComponent object with the chess board is is to represent.
@@ -36,6 +40,43 @@ public class ChessComponent extends JComponent {
 	public ChessComponent(ChessBoard newBoard) {
 		board = newBoard;
 		playerList = new ArrayList<ChessPlayer>();
+		moveSpaces = new ArrayList<ChessSpace>();
+		captureSpaces = new ArrayList<ChessSpace>();
+	}
+	
+	/**
+	 * Clears the ArrayList for highlighting squares.
+	 */
+	public void clearLists() {
+		moveSpaces = new ArrayList<ChessSpace>();
+		captureSpaces = new ArrayList<ChessSpace>();
+	}
+	
+	/**
+	 * Adds a new move space.
+	 * 
+	 * @param newSpace The space to be added
+	 */
+	public void addMoveSpace(ChessSpace newSpace) {
+		moveSpaces.add(newSpace);
+	}
+	
+	/**
+	 * Adds a new space that can be captured
+	 * 
+	 * @param newSpace the space that can be captured
+	 */
+	public void addCaptureSpace(ChessSpace newSpace) {
+		captureSpaces.add(newSpace);
+	}
+	
+	/**
+	 * Sets the current space that the mouse is over.
+	 * 
+	 * @param newSpace the space that the mouse is over
+	 */
+	public void setMouseOverSpace(ChessSpace newSpace) {
+		mouseOverSpace = newSpace;
 	}
 
 	/**
@@ -93,6 +134,15 @@ public class ChessComponent extends JComponent {
 	}
 
 	/**
+	 * Returns the ChessBoard.
+	 * 
+	 * @return the ChessBoard
+	 */
+	public ChessBoard getBoard() {
+		return board;
+	}
+	
+	/**
 	 * Paints the board and pieces.
 	 * 
 	 * @param g the graphics to be used
@@ -107,17 +157,49 @@ public class ChessComponent extends JComponent {
 				} else {
 					g2.setColor(Color.WHITE);
 				}
-				Rectangle r = new Rectangle(row * pointSize, col * pointSize, pointSize, pointSize);
+				Rectangle r = new Rectangle(col * pointSize, row * pointSize, pointSize, pointSize);
 				g2.fill(r);
 			}
 		}
 
+		
+		
+		g2.setColor(new Color(51, 255, 51, 150)); // lime green
+		for (ChessSpace space : moveSpaces) {
+			int row = space.getRow();
+			int col = space.getCol();
+			Rectangle r = new Rectangle(col * pointSize, row * pointSize, pointSize, pointSize);
+			g2.fill(r);
+		}
+		
+		g2.setColor(new Color(255, 51, 51, 150)); // light red
+		for (ChessSpace space : captureSpaces) {
+			int row = space.getRow();
+			int col = space.getCol();
+			Rectangle r = new Rectangle(col * pointSize, row * pointSize, pointSize, pointSize);
+			g2.fill(r);
+		}
+		
+		if (mouseOverSpace != null) {
+			g2.setColor(new Color(132, 112, 255, 150)); // light blue
+			Rectangle r = new Rectangle(mouseOverSpace.getCol() * pointSize, mouseOverSpace.getRow() * pointSize, pointSize, pointSize);
+			g2.fill(r);
+		}
+		
 		for (ChessPlayer p : playerList) {
 			for (ChessPiece c : p.getPieces()) {
-				c.getImageIcon().paintIcon(this, g2, c.getSpace().getCol() * pointSize, c.getSpace().getRow() * pointSize); // note that col
-																															// is x and row
-																															// is y
+				// if the piece is a king and is in check, paint the backgroud red
+				if (c instanceof King) {
+					King king = (King) c;
+					if (king.getCheck()) {
+						g2.setColor(Color.RED);
+						Rectangle r = new Rectangle(king.getSpace().getCol() * pointSize, king.getSpace().getRow() * pointSize, pointSize, pointSize);
+						g2.fill(r);
+					}
+				}
+				// note that col is x and row is y
+				c.getImageIcon().paintIcon(this, g2, c.getSpace().getCol() * pointSize, c.getSpace().getRow() * pointSize);
 			}
 		}
-	}
+	}	
 }

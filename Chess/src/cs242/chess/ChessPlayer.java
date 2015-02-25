@@ -21,6 +21,7 @@ public class ChessPlayer {
 	private ArrayList<ChessPiece> pieces;
 	private ChessBoard board;
 	private King king;
+	private String name;
 
 	/**
 	 * Constructor that receives a color and a board. It finds all the pieces of that color on the board and stores them in an ArrayList. It
@@ -29,7 +30,7 @@ public class ChessPlayer {
 	 * @param color the color of the pieces the player is using
 	 * @param startingBoard the board the player is playing on
 	 */
-	public ChessPlayer(Color color, ChessBoard startingBoard) {
+	public ChessPlayer(Color color, ChessBoard startingBoard, String playerName) {
 		pieces = startingBoard.getPieces(color);
 		board = startingBoard;
 		for (ChessPiece p : pieces) {
@@ -38,6 +39,7 @@ public class ChessPlayer {
 				break;
 			}
 		}
+		name = playerName;
 	}
 
 	/**
@@ -86,6 +88,15 @@ public class ChessPlayer {
 	}
 
 	/**
+	 * Returns the player's name.
+	 * 
+	 * @return the player's name
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
 	 * Tests if moving a piece to a target space puts the king in check. The method returns the ChessBoard to its original state at the end
 	 * of the method. The method assumes that the move is valid, has a clear path and is of a different color.
 	 * 
@@ -104,32 +115,17 @@ public class ChessPlayer {
 		ChessSpace originalSpace = piece.getSpace();
 		ArrayList<ChessPiece> opponentPieces = board.getOpponentPieces(piece.getColor());
 		ArrayList<CaptureSpace> dangerSpaces = board.findPossibleMoves(opponentPieces);
-		// remove from opponent list
+		// remove captured enemy piece from opponent list
 		if (targetPiece != null) {
 			opponentPieces.remove(targetPiece);
 		}
-		// if it is a Pawn, we don't want to let it promote
-		Pawn currentPawn = null;
-		if (piece instanceof Pawn) {
-			currentPawn = (Pawn) piece;
-		}
-		if (currentPawn != null
-				&& ((currentPawn.getDirection() == 0 && targetSpace.getRow() == 7) || (currentPawn.getDirection() == 1 && targetSpace
-						.getRow() == 0))) {
-			if (targetPiece != null) {
-				targetSpace.getPiece().setSpace(null);
-			}
-			targetSpace.setPiece(piece);
-			piece.getSpace().setPiece(null);
-			piece.setSpace(targetSpace);
-		} else { // otherwise use the abstract method to move the piece (and remove the piece there)
-			piece.moveTo(targetSpace);
-		}
+		// we use the abstract method to prevent Pawn promotions and similar move actions
+		piece.generalMoveTo(targetSpace);
 		// check if in check
 		dangerSpaces = board.findPossibleMoves(opponentPieces);
 		CaptureSpace canCaptureKing = board.findCaptureSpace(dangerSpaces, king.getSpace());
 		// move piece back
-		piece.moveTo(originalSpace);
+		piece.generalMoveTo(originalSpace);
 		// undo capture and re-add piece. If there is no piece there, targetSpace will have its piece set to null
 		if (targetPiece != null) {
 			// if the piece is a Boo, undo the absorption
@@ -172,12 +168,24 @@ public class ChessPlayer {
 	 * @return an ArrayList of all the moves the player can make
 	 */
 	public ArrayList<CaptureSpace> getPossibleMoves() {
-		if (pieces.size() == 0) {
+		return getPossibleMoves(pieces);
+	}
+	
+	/**
+	 * A helper function that takes in an ArrayList of pieces and returns a list of all valid moves a player can make using those pieces.
+	 * 
+	 * @param pieceArray the array of pieces to consider
+	 * @return an ArrayList of valid spaces
+	 */
+	public ArrayList<CaptureSpace> getPossibleMoves(ArrayList<ChessPiece> pieceArray) {
+		if (pieceArray.size() == 0) {
 			return null;
 		}
-		ArrayList<CaptureSpace> possibleMoves = board.findPossibleMoves(pieces);
+		ArrayList<CaptureSpace> possibleMoves = board.findPossibleMoves(pieceArray);
+		// iterate through all spaces
 		for (int spaceIndex = possibleMoves.size() - 1; spaceIndex >= 0; spaceIndex--) {
 			CaptureSpace currentSpace = possibleMoves.get(spaceIndex);
+			// iterate through all pieces that can capture that space
 			for (int pieceIndex = currentSpace.getPieces().size() - 1; pieceIndex >= 0; pieceIndex--) {
 				if (moveLeavesKingInCheck(currentSpace.getPieces().get(pieceIndex),
 						board.getPointValue(currentSpace.getRow(), currentSpace.getCol()))) {
@@ -189,5 +197,77 @@ public class ChessPlayer {
 			}
 		}
 		return possibleMoves;
+	}
+	
+	/**
+	 * Returns a list of possible spaces a single piece can move to according to the rules of Chess.
+	 * This method accounts for putting the king in check.
+	 * 
+	 * @param p the piece in consideration
+	 * @return an ArrayList of possible ChessSpaces
+	 */
+	public ArrayList<ChessSpace> getPossibleMoves(ChessPiece p) {
+		ArrayList<ChessSpace> possibleMoves = board.findPossibleMoves(p, false);
+		for (int i = possibleMoves.size() - 1; i >= 0; i--) {
+			if (moveLeavesKingInCheck(p, possibleMoves.get(i))) {
+				possibleMoves.remove(i);
+			}
+		}
+		return possibleMoves;
+	}
+	
+	/**
+	 * Determines if the player is in checkmate.
+	 * 
+	 * @param possibleMoves the valid moves the player can make
+	 * @return true if the player is in checkmate, false otherwise
+	 */
+	public boolean inCheckmate(ArrayList<CaptureSpace> possibleMoves) {
+		// we scan the spaces that the opponent can capture.
+		// we don't need to account for the opponent putting their king in check because it is not their turn
+		// if the player has moves, then no checkmate
+		if (possibleMoves.size() != 0) {
+			return false;
+		}
+		// if the king is in check, return true
+		return king.getCheck();
+	}
+	
+	/**
+	 * Determines if the player is in stalemate.
+	 * This method does not account for the 50 move rule.
+	 * 
+	 * @param possibleMoves the valid moves the player can make
+	 * @return true if the player is in stalemate, false otherwise
+	 */
+	public boolean inStalemate(ArrayList<CaptureSpace> possibleMoves) {
+		if (!king.getCheck() && possibleMoves.size() == 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * A wrapper method for the checkmate and stalemate methods.
+	 * We use this method for computational efficiency because the two methods are very similar
+	 * 
+	 * @return 1 if checkmate, 2 if stalemate, 0 otherwise
+	 */
+	public int checkEndConditions() {
+		ArrayList<CaptureSpace> possibleMoves = getPossibleMoves();
+		if (inCheckmate(possibleMoves)) {
+			return 1;
+		}
+		if (inStalemate(possibleMoves)) {
+			return 2;
+		}
+		return 0;
+	}
+	
+	/**
+	 * Updates the pieces array according to the remaining pieces on the board.
+	 */
+	public void updatePieceArray() {
+		setPieces(board.getPieces(getKing().getColor()));
 	}
 }

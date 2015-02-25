@@ -51,7 +51,7 @@ public class ChessPlayerTest {
 	@Before
 	public void setUp() throws Exception {
 		board.setChessBoard();
-		player = new ChessPlayer(Color.WHITE, board);
+		player = new ChessPlayer(Color.WHITE, board, "New Player");
 	}
 
 	/**
