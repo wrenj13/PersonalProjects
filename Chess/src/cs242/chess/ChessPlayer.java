@@ -97,6 +97,15 @@ public class ChessPlayer {
 	}
 	
 	/**
+	 * Sets the name of the player
+	 * 
+	 * @param newName the new name of the player
+	 */
+	public void setName(String newName) {
+		name = newName;
+	}
+	
+	/**
 	 * Tests if moving a piece to a target space puts the king in check. The method returns the ChessBoard to its original state at the end
 	 * of the method. The method assumes that the move is valid, has a clear path and is of a different color.
 	 * 

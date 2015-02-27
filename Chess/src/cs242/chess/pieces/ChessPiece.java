@@ -113,7 +113,7 @@ public abstract class ChessPiece {
 	public void moveTo(ChessSpace newSpace) {
 		ChessPiece targetPiece = newSpace.getPiece();
 		if (targetPiece != null) {
-			newSpace.getPiece().setSpace(null);
+			targetPiece.setSpace(null);
 		}
 		newSpace.setPiece(this);
 		if (getSpace() != null) {
@@ -133,7 +133,7 @@ public abstract class ChessPiece {
 	public final void generalMoveTo(ChessSpace newSpace) {
 		ChessPiece targetPiece = newSpace.getPiece();
 		if (targetPiece != null) {
-			newSpace.getPiece().setSpace(null);
+			targetPiece.setSpace(null);
 		}
 		newSpace.setPiece(this);
 		if (getSpace() != null) {

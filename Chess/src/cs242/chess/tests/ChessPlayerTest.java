@@ -14,7 +14,6 @@ import cs242.chess.CaptureSpace;
 import cs242.chess.ChessBoard;
 import cs242.chess.ChessPlayer;
 import cs242.chess.pieces.Bishop;
-import cs242.chess.pieces.ChessPiece;
 import cs242.chess.pieces.King;
 import cs242.chess.pieces.Knight;
 import cs242.chess.pieces.Pawn;
@@ -112,6 +111,7 @@ public class ChessPlayerTest {
 
 	/**
 	 * Tests if the possible moves array is empty on checkmate.
+	 * Also tests if the end game method returns 1
 	 */
 	@Test
 	public void testCheckMate() {
@@ -120,12 +120,15 @@ public class ChessPlayerTest {
 		Queen queen = (Queen) board.getPointValue(0, 3).getPiece();
 		player.removePiece(board.getPointValue(6, 5).getPiece());
 		queen.moveTo(board.getPointValue(6, 5)); // checkmate
+		((King) board.getPointValue(7, 4).getPiece()).setCheck(true);
 		ArrayList<CaptureSpace> possibleMoves = player.getPossibleMoves();
 		assertEquals(possibleMoves.size(), 0); // should have 0 possible spaces to move to
+		int endGame = player.checkEndConditions();
+		assertEquals(endGame, 1);
 	}
 
 	/**
-	 * Tests if the possible moves array is empty on checkmate.
+	 * Tests that getting the possible moves doesnt change the board
 	 */
 	@Test
 	public void testBoardUnchanged() {
@@ -140,5 +143,21 @@ public class ChessPlayerTest {
 		assertSame(board.getPointValue(5, 2).getPiece(), blackQueen);
 		assertSame(board.getPointValue(6, 1).getPiece(), pawnThatCanCaptureQueen);
 		assertSame(board.getPointValue(7, 4).getPiece(), player.getKing());
+	}
+	
+	/**
+	 * Tests if the stalemate condition returns true
+	 */
+	@Test
+	public void testStalemate() {
+		board.clear();
+		board.getPointValue(0, 0).setPiece(new King(Color.WHITE, board.getPointValue(0, 0)));
+		((King) board.getPointValue(0, 0).getPiece()).setCheck(false);
+		board.getPointValue(1, 7).setPiece(new Rook(Color.BLACK, board.getPointValue(1, 7)));
+		board.getPointValue(7, 1).setPiece(new Rook(Color.BLACK, board.getPointValue(7, 1)));
+		player = new ChessPlayer(Color.WHITE, board, "New Player");
+		int endGame = player.checkEndConditions();
+		assertEquals(endGame, 2);
+		
 	}
 }

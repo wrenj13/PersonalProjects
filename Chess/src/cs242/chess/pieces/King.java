@@ -49,7 +49,7 @@ public class King extends ChessPiece {
 	/**
 	 * Sets whether or not the king is in check
 	 * 
-	 * @param whether or not the king is in check
+	 * @param check whether or not the king is in check
 	 */
 	public void setCheck(boolean check) {
 		inCheck = check;

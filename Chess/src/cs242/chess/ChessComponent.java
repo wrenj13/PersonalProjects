@@ -27,7 +27,7 @@ public class ChessComponent extends JComponent {
 
 	private ChessBoard board;
 	private ArrayList<ChessPlayer> playerList;
-	private int pointSize = 100;
+	private int pointSize = 75;
 	private ArrayList<ChessSpace> moveSpaces; // highlight these spaces in green
 	private ArrayList<ChessSpace> captureSpaces; // highlight these spaces in red
 	private ChessSpace mouseOverSpace; // highlight this space in blue
@@ -42,6 +42,35 @@ public class ChessComponent extends JComponent {
 		playerList = new ArrayList<ChessPlayer>();
 		moveSpaces = new ArrayList<ChessSpace>();
 		captureSpaces = new ArrayList<ChessSpace>();
+	}
+	
+
+	/**
+	 * Returns the player at the given index in the ArrayList.
+	 * 
+	 * @param index the index of the desired player
+	 * @return the player at that index
+	 */
+	public ChessPlayer getPlayer(int index) {
+		return playerList.get(index);
+	}
+
+	/**
+	 * Returns the ArrayList of players.
+	 * 
+	 * @return the ArrayList of players
+	 */
+	public ArrayList<ChessPlayer> getPlayerList() {
+		return playerList;
+	}
+
+	/**
+	 * Returns the ChessBoard.
+	 * 
+	 * @return the ChessBoard
+	 */
+	public ChessBoard getBoard() {
+		return board;
 	}
 	
 	/**
@@ -111,35 +140,19 @@ public class ChessComponent extends JComponent {
 	 * @param newPlayer the player to add to the game
 	 */
 	public void addPlayer(ChessPlayer newPlayer) {
+		// rescale images
+		for (int pieceIndex = 0; pieceIndex < newPlayer.getPieces().size(); pieceIndex++) {
+			Image scaledImage = newPlayer.getPieces().get(pieceIndex).getImageIcon().getImage().getScaledInstance(pointSize, pointSize, Image.SCALE_DEFAULT);
+			newPlayer.getPieces().get(pieceIndex).getImageIcon().setImage(scaledImage);
+		}
 		playerList.add(newPlayer);
 	}
-
+	
 	/**
-	 * Returns the player at the given index in the ArrayList.
-	 * 
-	 * @param index the index of the desired player
-	 * @return the player at that index
+	 * Removes all players from the player list.
 	 */
-	public ChessPlayer getPlayer(int index) {
-		return playerList.get(index);
-	}
-
-	/**
-	 * Returns the ArrayList of players.
-	 * 
-	 * @return the ArrayList of players
-	 */
-	public ArrayList<ChessPlayer> getPlayerList() {
-		return playerList;
-	}
-
-	/**
-	 * Returns the ChessBoard.
-	 * 
-	 * @return the ChessBoard
-	 */
-	public ChessBoard getBoard() {
-		return board;
+	public void clearPlayerList() {
+		playerList.clear();
 	}
 	
 	/**
@@ -163,7 +176,7 @@ public class ChessComponent extends JComponent {
 		}
 
 		
-		
+		// paint the possible move spaces
 		g2.setColor(new Color(51, 255, 51, 150)); // lime green
 		for (ChessSpace space : moveSpaces) {
 			int row = space.getRow();
@@ -172,6 +185,7 @@ public class ChessComponent extends JComponent {
 			g2.fill(r);
 		}
 		
+		// paint the capture spaces
 		g2.setColor(new Color(255, 51, 51, 150)); // light red
 		for (ChessSpace space : captureSpaces) {
 			int row = space.getRow();
@@ -180,6 +194,7 @@ public class ChessComponent extends JComponent {
 			g2.fill(r);
 		}
 		
+		// paint the space the mouse is over
 		if (mouseOverSpace != null) {
 			g2.setColor(new Color(132, 112, 255, 150)); // light blue
 			Rectangle r = new Rectangle(mouseOverSpace.getCol() * pointSize, mouseOverSpace.getRow() * pointSize, pointSize, pointSize);
@@ -198,7 +213,10 @@ public class ChessComponent extends JComponent {
 					}
 				}
 				// note that col is x and row is y
-				c.getImageIcon().paintIcon(this, g2, c.getSpace().getCol() * pointSize, c.getSpace().getRow() * pointSize);
+				// we include this if statement for the case in which the board is repainted before the piece array can update
+				if (c.getSpace() != null) {
+					c.getImageIcon().paintIcon(this, g2, c.getSpace().getCol() * pointSize, c.getSpace().getRow() * pointSize);
+				}
 			}
 		}
 	}	
